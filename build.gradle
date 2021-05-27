@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+group 'com.glitchsoftware'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        name = 'JitPack'
+        url = 'https://jitpack.io'
+    }
+
+    maven {
+        name = 'JxBrowser'
+        url = 'https://europe-maven.pkg.dev/jxbrowser/releases'
+    }
+}
+
+configurations {
+    shaded
+
+    compile.extendsFrom shaded
+}
+
+dependencies {
+    shaded 'com.google.code.gson:gson:+'
+    shaded 'club.minnced:discord-webhooks:+'
+    shaded 'org.jsoup:jsoup:+'
+    shaded 'com.squareup.okhttp3:okhttp:+'
+    shaded 'com.github.nevalackin:homo-bus:1.0.0'
+    shaded 'com.teamdev.jxbrowser:jxbrowser-cross-platform:7.14'
+    shaded 'com.teamdev.jxbrowser:jxbrowser-swing:7.14'
+    //shaded 'com.github.mmarquee:ui-automation:+'
+    shaded 'com.sparkjava:spark-core:2.7.2'
+
+    shaded 'com.github.Glitch-Software:ui-automation:0.5.6'
+
+    shaded 'org.projectlombok:lombok:+'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+}
+
+shadowJar {
+    configurations = [project.configurations.shaded]
+}
+
+build {
+    dependsOn shadowJar
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": "Main")
+    }
+}
