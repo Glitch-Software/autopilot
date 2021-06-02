@@ -29,13 +29,14 @@ public class WebSocket {
      * also sets our port to 8080 and initializes Spark
      */
     public void start() {
-        webSocket("/socket", new WebSocketHandler());
-        port(8080);
+        webSocket("", new WebSocketHandler());
+        port(4317);
         init();
     }
 
     public void send(Packet packet) {
         try {
+            System.out.println("sending " + packet.getName());
             session.getRemote().sendString(Serializer.serialize(packet));
         } catch (Exception e) {
             e.printStackTrace();

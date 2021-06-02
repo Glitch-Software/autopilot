@@ -1,19 +1,22 @@
 package com.glitchsoftware.autopilot.app.packet.impl;
 
+
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.PacketManifest;
+import com.glitchsoftware.autopilot.socket.model.User;
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
 
 /**
  * @author Brennan
  * @since 5/30/2021
  **/
-@PacketManifest("authenticate")
-@Getter
-public class AuthenticatePacket extends Packet {
+@PacketManifest("authenticated")
+public class AuthenticatedPacket extends Packet {
 
-    @SerializedName("license")
-    private String license;
+    @SerializedName("user")
+    private User user;
 
+    public AuthenticatedPacket(User user) {
+        this.user = user;
+    }
 }

@@ -1,8 +1,7 @@
 package com.glitchsoftware.autopilot.app.packet;
 
 import com.glitchsoftware.autopilot.app.packet.impl.AuthenticatePacket;
-import com.glitchsoftware.autopilot.app.packet.impl.LogPacket;
-import com.glitchsoftware.autopilot.app.packet.impl.TestTaskPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.InitializePacket;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.Map;
  * Our PacketManger is used to identify incoming packets used for {@link com.glitchsoftware.autopilot.app.packet.serializer.Serializer}
  **/
 @Getter
-public class PacketManager {
+public class WebSocketPacketManager {
     /**
      * Our packets map
      *
@@ -27,10 +26,12 @@ public class PacketManager {
     /**
      * Only add packets that get sent to our websocket
      */
-    public PacketManager() {
-        packetClasses.put("log", LogPacket.class);
+    public WebSocketPacketManager() {
+        packetClasses.put("initialize", InitializePacket.class);
         packetClasses.put("authenticate", AuthenticatePacket.class);
-        packetClasses.put("test_packet", TestTaskPacket.class);
+//        packetClasses.put("log", LogPacket.class);
+//        packetClasses.put("authenticate", AuthenticatePacket.class);
+//        packetClasses.put("test_packet", TestTaskPacket.class);
     }
 
 }

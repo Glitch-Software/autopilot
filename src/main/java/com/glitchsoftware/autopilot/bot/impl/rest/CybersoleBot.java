@@ -5,6 +5,7 @@ import com.glitchsoftware.autopilot.bot.annotations.RestManifest;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
 import mmarquee.automation.controls.Application;
 import mmarquee.automation.controls.ElementBuilder;
+import mmarquee.automation.controls.Panel;
 import okhttp3.Cookie;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,6 +42,10 @@ public class CybersoleBot extends ConnectionBot {
                 application.launchOrAttach();
 
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
+            }
+            Panel whatBotPanel = getAutomation().findPane("Cybersole");
+            while (whatBotPanel == null) {
+                whatBotPanel = getAutomation().findPane("Cybersole");
             }
             final String link = String.format("https://www.%s/product/~/%s.html", site, sku);
 

@@ -6,20 +6,23 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Brennan
- * @since 5/24/2021
- *
- * This packet is used for when we log something for our react-app to post
+ * @since 5/30/2021
  **/
 @PacketManifest("log")
 public class LogPacket extends Packet {
+
     @SerializedName("level")
     private int level;
 
     @SerializedName("message")
     private String message;
 
-    public LogPacket(int level, String message) {
+    @SerializedName("time_stamp")
+    private String timestamp;
+
+    public LogPacket(int level, String message, String timestamp) {
         this.level = level;
         this.message = message;
+        this.timestamp = timestamp;
     }
 }

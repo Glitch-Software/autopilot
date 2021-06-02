@@ -2,11 +2,14 @@ package com.glitchsoftware.autopilot.app.packet.impl;
 
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.PacketManifest;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Brennan
- * @since 5/25/2021
+ * @since 6/1/2021
  **/
-@PacketManifest("test_packet")
-public class TestTaskPacket extends Packet {
+@PacketManifest("initialize")
+@NoArgsConstructor
+public class InitializePacket extends Packet {
+
 }

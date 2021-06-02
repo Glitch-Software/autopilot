@@ -32,7 +32,7 @@ public class Serializer {
     public static Packet deserialize(String input) {
         final JsonObject jsonObject = JsonParser.parseString(input).getAsJsonObject();
 
-        return AutoPilot.INSTANCE.getGSON().fromJson(jsonObject, (Type) AutoPilot.INSTANCE.getPacketManager()
+        return AutoPilot.INSTANCE.getGSON().fromJson(jsonObject, (Type) AutoPilot.INSTANCE.getWebSocketPacketManager()
                 .getPacketClasses().get(jsonObject.get("packet_name").getAsString()));
     }
 

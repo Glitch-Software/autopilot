@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import mmarquee.automation.controls.Application;
 import mmarquee.automation.controls.ElementBuilder;
+import mmarquee.automation.controls.Panel;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -67,6 +68,11 @@ public class KylinBot extends ConnectionBot {
                 application.launchOrAttach();
 
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
+            }
+
+            Panel whatBotPanel = getAutomation().findPane("Kylin");
+            while (whatBotPanel == null) {
+                whatBotPanel = getAutomation().findPane("Kylin");
             }
 
             for(int i = 0; i < taskQuantity; i++)

@@ -3,7 +3,9 @@ package com.glitchsoftware.autopilot.app;
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
+import com.glitchsoftware.autopilot.app.packet.impl.LogPacket;
 import com.glitchsoftware.autopilot.app.packet.serializer.Serializer;
+import com.google.gson.JsonObject;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -11,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Brennan
@@ -58,11 +61,12 @@ public class WebSocketHandler {
      */
     @OnWebSocketMessage
     public void handlePacketMessage(Session session, String message) throws IOException {
-        System.out.println(message);
         final Packet packet = Serializer.deserialize(message);
 
-        for(Command command : AutoPilot.INSTANCE.getCommandManger().getCommands())
-            command.execute(packet);
+        for(Command command : AutoPilot.INSTANCE.getWebSocketCommandManger().getCommands()) {
+            if(command.getPacketName().equalsIgnoreCase(packet.getName()))
+                command.execute(packet);
+        }
     }
 
 }
