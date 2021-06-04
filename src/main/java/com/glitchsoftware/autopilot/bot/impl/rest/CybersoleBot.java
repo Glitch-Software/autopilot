@@ -3,9 +3,13 @@ package com.glitchsoftware.autopilot.bot.impl.rest;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.annotations.RestManifest;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.util.Logger;
+import mmarquee.automation.AutomationException;
+import mmarquee.automation.UIAutomation;
 import mmarquee.automation.controls.Application;
 import mmarquee.automation.controls.ElementBuilder;
 import mmarquee.automation.controls.Panel;
+import mmarquee.automation.controls.Window;
 import okhttp3.Cookie;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -33,7 +37,9 @@ public class CybersoleBot extends ConnectionBot {
         }
 
         try {
-            if(getAutomation().findPane("Cybersole") == null) {
+            if(findWindow("CyberAIO") == null) {
+                Logger.logInfo("Launching Cybersole");
+
                 final Application application =
                         new Application(
                                 new ElementBuilder()
@@ -43,12 +49,17 @@ public class CybersoleBot extends ConnectionBot {
 
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
             }
-            Panel whatBotPanel = getAutomation().findPane("Cybersole");
-            while (whatBotPanel == null) {
-                whatBotPanel = getAutomation().findPane("Cybersole");
-            }
-            final String link = String.format("https://www.%s/product/~/%s.html", site, sku);
 
+            Logger.logInfo("Waiting Cybersole");
+            Window cybersoleWindow = findWindow("CyberAIO");
+            while (cybersoleWindow == null) {
+                cybersoleWindow = findWindow("CyberAIO");
+            }
+            Logger.logSuccess("Found Cybersole");
+
+            final String link = String.format("https://www.%s.com/product/~/%s.html", site, sku);
+
+            Logger.logInfo("Sending SKU to Cybersole API");
             for(int i = 0; i < taskQuantity; i++)
                 send(String.format(getApiUrl(), site + ":" + link));
 
@@ -60,6 +71,15 @@ public class CybersoleBot extends ConnectionBot {
 
 
         return false;
+    }
+
+    public Window findWindow(String name) throws AutomationException {
+        for(Window window : getAutomation().getDesktopWindows()) {
+            if(window.getName().contains(name))
+                return window;
+        }
+
+        return null;
     }
 
     private boolean send(String link) {
@@ -80,8 +100,12 @@ public class CybersoleBot extends ConnectionBot {
                     .build();
 
             try(Response response = getOkHttpClient().newCall(request).execute()) {
-                if(response.code() == 200)
+                if(response.code() == 200) {
+                    Logger.logSuccess("Successfully sent SKU to Cybersole API");
                     return !response.body().string().contains("discord");
+                } else {
+                    Logger.logError("Received " + response.code() + " for Cybersole please check your session ID");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

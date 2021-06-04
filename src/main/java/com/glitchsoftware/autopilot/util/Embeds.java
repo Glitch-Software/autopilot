@@ -16,6 +16,23 @@ import java.time.Instant;
  **/
 public class Embeds {
 
+    public static void sendTestWebhook() {
+        final WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder();
+
+        embedBuilder.setColor(new Color(0x30E29B).getRGB());
+        embedBuilder.setThumbnailUrl("https://cdn.discordapp.com/attachments/700223049466904641/838133373208625152/logo.png");
+        embedBuilder.setTimestamp(Instant.now());
+
+        embedBuilder.setDescription("This is a test.");
+
+        final WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername("Glitch: AutoPilot");
+        webhookMessageBuilder.setAvatarUrl("https://cdn.discordapp.com/attachments/700223049466904641/838133373208625152/logo.png");
+        webhookMessageBuilder.addEmbeds(embedBuilder.build());
+
+        AutoPilot.INSTANCE.getDiscordWebhook().send(webhookMessageBuilder.build());
+    }
+
     public static void sendTaskStarted(PingPacket.PingProduct product) {
         final WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder();
 

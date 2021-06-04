@@ -1,5 +1,6 @@
 package com.glitchsoftware.autopilot.config;
 
+import club.minnced.discord.webhook.WebhookClient;
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.config.impl.Auth;
 import com.glitchsoftware.autopilot.config.impl.WebHooks;
@@ -64,6 +65,10 @@ public class Config {
                 this.setSelectedLanguage(jsonObject.get("selected_language").getAsString());
                 this.getWebHooks().setDiscordWebhook(jsonObject.getAsJsonObject("web_hooks").get("discord_webhook").getAsString());
                 this.getAuth().setLicense(jsonObject.getAsJsonObject("auth").get("license").getAsString());
+
+                if(!this.getWebHooks().getDiscordWebhook().isEmpty()) {
+                    AutoPilot.INSTANCE.setDiscordWebhook(WebhookClient.withUrl(this.getWebHooks().getDiscordWebhook()));
+                }
 
                 bufferedReader.close();
             } else {

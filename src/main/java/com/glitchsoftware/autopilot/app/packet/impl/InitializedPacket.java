@@ -3,6 +3,7 @@ package com.glitchsoftware.autopilot.app.packet.impl;
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.PacketManifest;
 import com.glitchsoftware.autopilot.socket.model.User;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
@@ -18,14 +19,18 @@ public class InitializedPacket extends Packet {
     private User user;
 
     @SerializedName("items")
-    private JsonElement jsonElement;
+    private JsonArray jsonElement;
+
+    @SerializedName("bots")
+    private JsonArray bots;
 
     public InitializedPacket() {
     }
 
-    public InitializedPacket(User user, JsonElement jsonElement) {
+    public InitializedPacket(User user, JsonArray jsonElement, JsonArray bots) {
         this.user = user;
         this.jsonElement = jsonElement;
+        this.bots = bots;
     }
 
     public InitializedPacket(User user) {

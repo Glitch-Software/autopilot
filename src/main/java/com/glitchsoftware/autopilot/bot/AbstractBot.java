@@ -52,7 +52,9 @@ public abstract class AbstractBot implements Bot {
     public JsonObject toJSON() {
         final JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("file_path", getFile().getAbsolutePath());
+        if(getFile() != null) {
+            jsonObject.addProperty("file_path", getFile().getAbsolutePath());
+        }
 
         return jsonObject;
     }

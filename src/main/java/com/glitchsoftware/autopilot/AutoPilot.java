@@ -1,8 +1,10 @@
 package com.glitchsoftware.autopilot;
 
+import club.minnced.discord.webhook.WebhookClient;
 import com.glitchsoftware.autopilot.app.WebSocket;
 import com.glitchsoftware.autopilot.app.command.WebSocketCommandManger;
 import com.glitchsoftware.autopilot.app.packet.WebSocketPacketManager;
+import com.glitchsoftware.autopilot.bot.BotManager;
 import com.glitchsoftware.autopilot.config.Config;
 import com.glitchsoftware.autopilot.socket.SocketConnection;
 import com.glitchsoftware.autopilot.socket.command.Command;
@@ -37,6 +39,7 @@ public enum AutoPilot {
     INSTANCE;
 
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
+    private final File botsFile = new File(baseFile, "bots");
 
     private final WebSocket webSocket = new WebSocket();
     private SocketConnection socketConnection;
@@ -45,11 +48,16 @@ public enum AutoPilot {
 
     private final Gson GSON = new GsonBuilder().create();
 
+    private BotManager botManager;
+
     private final WebSocketPacketManager webSocketPacketManager = new WebSocketPacketManager();
     private final WebSocketCommandManger webSocketCommandManger = new WebSocketCommandManger();
 
     private final SocketPacketManager socketPacketManager = new SocketPacketManager();
     private final SocketCommandManager socketCommandManager = new SocketCommandManager();
+
+    @Setter
+    private WebhookClient discordWebhook;
 
     private final Config config = new Config();
 
@@ -62,7 +70,12 @@ public enum AutoPilot {
     public void start() {
         if(!baseFile.exists())
             baseFile.mkdirs();
+        if(!botsFile.exists())
+            botsFile.mkdirs();
+
         config.load();
+        this.botManager = new BotManager();
+        System.out.println(botManager.getBotsAsJSON());
         startSocket();
         webSocket.start();
 

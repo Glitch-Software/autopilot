@@ -1,4 +1,8 @@
 import com.glitchsoftware.autopilot.AutoPilot;
+import com.glitchsoftware.autopilot.bot.impl.rest.PrismBot;
+import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+
+import java.io.File;
 
 /**
  * @author Brennan

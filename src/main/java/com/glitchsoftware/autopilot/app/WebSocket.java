@@ -37,7 +37,8 @@ public class WebSocket {
     public void send(Packet packet) {
         try {
             System.out.println("sending " + packet.getName());
-            session.getRemote().sendString(Serializer.serialize(packet));
+            if(session != null)
+                session.getRemote().sendString(Serializer.serialize(packet));
         } catch (Exception e) {
             e.printStackTrace();
         }

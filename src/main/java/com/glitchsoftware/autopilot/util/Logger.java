@@ -15,12 +15,13 @@ import java.util.Date;
 public class Logger {
 
     private static String timestamp() {
-        return new SimpleDateFormat("[HH:mm:ss]").format(new Date());
+        return new SimpleDateFormat("yyyy-dd-mm HH:mm:ss").format(new Date());
     }
 
     public static void logError(String message) {
-        message = Ansi.colorize(message, Attribute.RED_TEXT());
         AutoPilot.INSTANCE.getWebSocket().send(new LogPacket(0, message, timestamp()));
+
+        message = Ansi.colorize(message, Attribute.RED_TEXT());
         System.out.println(timestamp() + " [ERROR] " + message);
     }
 
@@ -32,14 +33,16 @@ public class Logger {
     }
 
     public static void logInfo(String message) {
-        message = Ansi.colorize(message, Attribute.BLUE_TEXT());
         AutoPilot.INSTANCE.getWebSocket().send(new LogPacket(2, message, timestamp()));
+
+        message = Ansi.colorize(message, Attribute.BLUE_TEXT());
         System.out.println(timestamp() +  " [INFO] " + message);
     }
 
     public static void logWarning(String message) {
-        message = Ansi.colorize(message, Attribute.YELLOW_TEXT());
         AutoPilot.INSTANCE.getWebSocket().send(new LogPacket(3, message, timestamp()));
+
+        message = Ansi.colorize(message, Attribute.YELLOW_TEXT());
         System.out.println(timestamp() +  " [WARNING] " + message);
     }
 }
