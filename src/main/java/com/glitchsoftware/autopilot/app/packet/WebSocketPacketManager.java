@@ -9,6 +9,7 @@ import com.glitchsoftware.autopilot.app.packet.impl.settings.TestWebhookPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.settings.UpdateSettingsPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.DeleteTaskPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.NewTaskPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.task.UpdateTaskPacket;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class WebSocketPacketManager {
         packetClasses.put("new_task", NewTaskPacket.class);
         packetClasses.put("delete_task", DeleteTaskPacket.class);
         packetClasses.put("need_items", NeedItemsPacket.class);
+        packetClasses.put("update_task", UpdateTaskPacket.class);
     }
 
 }

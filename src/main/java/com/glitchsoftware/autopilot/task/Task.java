@@ -21,6 +21,7 @@ public class Task {
     private String id, sku;
     private String[] bots;
     private int taskQuantity;
+    private boolean active;
 
     public Task() {
     }
@@ -30,6 +31,7 @@ public class Task {
         this.sku = sku;
         this.bots = bots;
         this.taskQuantity = taskQuantity;
+        this.active = true;
     }
 
     public JsonObject toJSON() {
@@ -37,6 +39,7 @@ public class Task {
 
         jsonObject.addProperty("id", getId());
         jsonObject.addProperty("sku", getSku());
+        jsonObject.addProperty("active", isActive());
 
         final JsonArray jsonArray = new JsonArray();
 
@@ -54,6 +57,9 @@ public class Task {
 
         if(jsonObject.has("sku"))
             setSku(jsonObject.get("sku").toString());
+
+        if(jsonObject.has("active"))
+            setActive(jsonObject.get("active").getAsBoolean());
 
         if(jsonObject.has("bots")) {
             final JsonArray jsonArray = jsonObject.getAsJsonArray("bots");

@@ -21,13 +21,17 @@ public class AddTaskPacket extends Packet {
     @SerializedName("bots")
     private String[] bots;
 
-    public AddTaskPacket(String id, String sku, String[] bots) {
+    @SerializedName("active")
+    private boolean active;
+
+    public AddTaskPacket(String id, String sku, String[] bots, boolean active) {
         this.id = id;
         this.sku = sku;
         this.bots = bots;
+        this.active = active;
     }
 
     public AddTaskPacket(Task task) {
-        this(task.getId(), task.getSku(), task.getBots());
+        this(task.getId(), task.getSku(), task.getBots(), task.isActive());
     }
 }

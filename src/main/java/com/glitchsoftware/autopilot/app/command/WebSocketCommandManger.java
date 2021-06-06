@@ -7,6 +7,7 @@ import com.glitchsoftware.autopilot.app.command.impl.bot.UpdateBotCommand;
 import com.glitchsoftware.autopilot.app.command.impl.items.NeedItemsPacket;
 import com.glitchsoftware.autopilot.app.command.impl.task.DeleteTaskCommand;
 import com.glitchsoftware.autopilot.app.command.impl.task.NewTaskCommand;
+import com.glitchsoftware.autopilot.app.command.impl.task.UpdateTaskCommand;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -31,5 +32,6 @@ public class WebSocketCommandManger {
         commands.add(new NewTaskCommand());
         commands.add(new DeleteTaskCommand());
         commands.add(new NeedItemsPacket());
+        commands.add(new UpdateTaskCommand());
     }
 }
