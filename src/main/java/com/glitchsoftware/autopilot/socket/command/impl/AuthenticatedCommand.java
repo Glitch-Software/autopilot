@@ -1,11 +1,11 @@
 package com.glitchsoftware.autopilot.socket.command.impl;
 
 import com.glitchsoftware.autopilot.AutoPilot;
-import com.glitchsoftware.autopilot.config.impl.Auth;
 import com.glitchsoftware.autopilot.socket.SocketConnection;
 import com.glitchsoftware.autopilot.socket.command.Command;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.impl.AuthenticatedPacket;
+import com.glitchsoftware.autopilot.util.Utils;
 
 /**
  * @author Brennan
@@ -23,14 +23,10 @@ public class AuthenticatedCommand extends Command {
 
         if(AutoPilot.INSTANCE.getCurrentUser() == null) {
             AutoPilot.INSTANCE.setCurrentUser(authenticatedPacket.getUser());
-            AutoPilot.INSTANCE.setProfitableItems(authenticatedPacket.getJsonElement().getAsJsonArray());
+
+            Utils.setProfitableItems();
+
+            System.out.println(AutoPilot.INSTANCE.getProfitableItems().size());
         }
-//        final com.glitchsoftware.autopilot.socket.packet.impl.AuthenticatedPacket authenticatedPacket =
-//                (com.glitchsoftware.autopilot.socket.packet.impl.AuthenticatedPacket) packet;
-//
-//        System.out.println(((AuthenticatedPacket) packet).getUser().getUsername());
-//    //    AutoPilot.INSTANCE.getWebSocket().send(new AuthenticatedPacket(authenticatedPacket.getUser()));
-
-
     }
 }

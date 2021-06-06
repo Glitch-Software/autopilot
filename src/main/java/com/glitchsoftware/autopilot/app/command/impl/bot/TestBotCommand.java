@@ -7,6 +7,7 @@ import com.glitchsoftware.autopilot.app.packet.impl.bot.TestBotPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.util.Logger;
 
 /**
  * @author Brennan
@@ -29,8 +30,10 @@ public class TestBotCommand extends Command {
             } else {
                 ((BasicBot) bot).runBot("footlocker", "glitchtest", "test", 1);
             }
-        } else {
 
+            Logger.logSuccess("[Bot Test] - " + bot.getName());
+        } else {
+            Logger.logError("[Bot Error] Failed to find Bot(" + testBotPacket.getId() + ")");
         }
     }
 }

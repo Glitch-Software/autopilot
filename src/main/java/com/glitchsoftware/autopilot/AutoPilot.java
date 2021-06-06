@@ -14,6 +14,7 @@ import com.glitchsoftware.autopilot.socket.model.User;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.SocketPacketManager;
 import com.glitchsoftware.autopilot.socket.packet.impl.HandshakePacket;
+import com.glitchsoftware.autopilot.task.TaskManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -49,6 +50,7 @@ public enum AutoPilot {
     private final Gson GSON = new GsonBuilder().create();
 
     private BotManager botManager;
+    private TaskManager taskManager;
 
     private final WebSocketPacketManager webSocketPacketManager = new WebSocketPacketManager();
     private final WebSocketCommandManger webSocketCommandManger = new WebSocketCommandManger();
@@ -75,7 +77,7 @@ public enum AutoPilot {
 
         config.load();
         this.botManager = new BotManager();
-        System.out.println(botManager.getBotsAsJSON());
+        this.taskManager = new TaskManager();
         startSocket();
         webSocket.start();
 
@@ -123,7 +125,7 @@ public enum AutoPilot {
         client.setListener(new IPCListener() {
             @Override
             public void onReady(IPCClient client) {
-                RichPresence.Builder builder = new RichPresence.Builder();
+                final RichPresence.Builder builder = new RichPresence.Builder();
                 builder.setState("Monitoring " + new String(Character.toChars(0x1F45F)) + "...")
                         .setDetails("1.0.0")
                         .setStartTimestamp(OffsetDateTime.now())

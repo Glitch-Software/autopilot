@@ -3,8 +3,9 @@ package com.glitchsoftware.autopilot.app.command.impl;
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
-import com.glitchsoftware.autopilot.app.packet.impl.TestWebhookPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.settings.TestWebhookPacket;
 import com.glitchsoftware.autopilot.util.Embeds;
+import com.glitchsoftware.autopilot.util.Logger;
 
 /**
  * @author Brennan
@@ -32,6 +33,8 @@ public class TestWebhookCommand extends Command {
                             &&
                             webHook.contains("webhooks")) {
                         Embeds.sendTestWebhook();
+
+                        Logger.logSuccess("[Discord Webhook] Sent Test");
                     }
                 }
                 break;

@@ -5,6 +5,7 @@ import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.UpdateBotPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
+import com.glitchsoftware.autopilot.util.Logger;
 
 import java.io.File;
 
@@ -27,8 +28,9 @@ public class UpdateBotCommand extends Command {
             bot.setFile(new File(updateBotPacket.getFilePath()));
 
             AutoPilot.INSTANCE.getBotManager().saveBot(bot);
+            Logger.logInfo("[Bot Updated] - " + bot.getName());
         } else {
-
+            Logger.logError("[Bot Error] Failed to find Bot(" + updateBotPacket.getId() + ")");
         }
     }
 }

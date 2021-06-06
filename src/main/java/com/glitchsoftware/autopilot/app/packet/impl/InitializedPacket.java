@@ -18,22 +18,18 @@ public class InitializedPacket extends Packet {
     @SerializedName("user")
     private User user;
 
-    @SerializedName("items")
-    private JsonArray jsonElement;
-
     @SerializedName("bots")
     private JsonArray bots;
+
+    @SerializedName("tasks")
+    private JsonArray tasks;
 
     public InitializedPacket() {
     }
 
-    public InitializedPacket(User user, JsonArray jsonElement, JsonArray bots) {
+    public InitializedPacket(User user, JsonArray bots, JsonArray tasks) {
         this.user = user;
-        this.jsonElement = jsonElement;
         this.bots = bots;
-    }
-
-    public InitializedPacket(User user) {
-        this.user = user;
+        this.tasks = tasks;
     }
 }

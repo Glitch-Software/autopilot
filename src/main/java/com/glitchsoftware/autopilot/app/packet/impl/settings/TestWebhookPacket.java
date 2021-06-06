@@ -1,4 +1,4 @@
-package com.glitchsoftware.autopilot.app.packet.impl;
+package com.glitchsoftware.autopilot.app.packet.impl.settings;
 
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.PacketManifest;
@@ -9,10 +9,11 @@ import lombok.Getter;
  * @author Brennan
  * @since 6/4/2021
  **/
-@PacketManifest("update_settings")
+@PacketManifest("test_webhook")
 @Getter
-public class UpdateSettingsPacket extends Packet {
+public class TestWebhookPacket extends Packet {
 
-    @SerializedName("discord_webhook")
-    private String discordWebhook;
+    @SerializedName("type")
+    private int type;
+
 }

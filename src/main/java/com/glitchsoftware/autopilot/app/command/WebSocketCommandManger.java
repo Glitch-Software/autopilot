@@ -1,12 +1,12 @@
 package com.glitchsoftware.autopilot.app.command;
 
-import com.glitchsoftware.autopilot.app.command.impl.AuthenticateCommand;
-import com.glitchsoftware.autopilot.app.command.impl.TestWebhookCommand;
-import com.glitchsoftware.autopilot.app.command.impl.UpdateSettingsCommand;
+import com.glitchsoftware.autopilot.app.command.impl.*;
 import com.glitchsoftware.autopilot.app.command.impl.bot.BotConnectionCommand;
-import com.glitchsoftware.autopilot.app.command.impl.InitializeCommand;
 import com.glitchsoftware.autopilot.app.command.impl.bot.TestBotCommand;
 import com.glitchsoftware.autopilot.app.command.impl.bot.UpdateBotCommand;
+import com.glitchsoftware.autopilot.app.command.impl.items.NeedItemsPacket;
+import com.glitchsoftware.autopilot.app.command.impl.task.DeleteTaskCommand;
+import com.glitchsoftware.autopilot.app.command.impl.task.NewTaskCommand;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -28,5 +28,8 @@ public class WebSocketCommandManger {
         commands.add(new TestBotCommand());
         commands.add(new UpdateSettingsCommand());
         commands.add(new TestWebhookCommand());
+        commands.add(new NewTaskCommand());
+        commands.add(new DeleteTaskCommand());
+        commands.add(new NeedItemsPacket());
     }
 }

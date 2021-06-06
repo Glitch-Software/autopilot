@@ -6,6 +6,8 @@ import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.BotConnectionPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.util.BotConnection;
+import com.glitchsoftware.autopilot.util.Logger;
 
 import java.io.File;
 
@@ -27,13 +29,17 @@ public class BotConnectionCommand extends Command {
         if(bot != null) {
             if(bot instanceof ConnectionBot) {
                 //# TODO add bot connection stuff again
+                System.out.println(bot.getName());
+                new BotConnection(bot.getName(), ((ConnectionBot) bot));
             }
 
             bot.setFile(new File(connectionPacket.getFilePath()));
 
             AutoPilot.INSTANCE.getBotManager().saveBot(bot);
-        } else {
 
+            Logger.logInfo("[Bot Add] - " + bot.getName());
+        } else {
+            Logger.logError("[Bot Error] Failed to find Bot(" + connectionPacket.getId() + ")");
         }
     }
 }

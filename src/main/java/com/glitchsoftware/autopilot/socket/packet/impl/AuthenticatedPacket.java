@@ -18,6 +18,4 @@ public class AuthenticatedPacket extends Packet {
     @SerializedName("user")
     private User user;
 
-    @SerializedName("items")
-    private JsonElement jsonElement;
 }

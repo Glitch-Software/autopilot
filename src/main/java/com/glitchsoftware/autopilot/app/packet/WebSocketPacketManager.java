@@ -1,12 +1,14 @@
 package com.glitchsoftware.autopilot.app.packet;
 
-import com.glitchsoftware.autopilot.app.packet.impl.AuthenticatePacket;
-import com.glitchsoftware.autopilot.app.packet.impl.TestWebhookPacket;
-import com.glitchsoftware.autopilot.app.packet.impl.UpdateSettingsPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.*;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.BotConnectionPacket;
-import com.glitchsoftware.autopilot.app.packet.impl.InitializePacket;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.TestBotPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.UpdateBotPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.items.NeedItemsPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.settings.TestWebhookPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.settings.UpdateSettingsPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.task.DeleteTaskPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.task.NewTaskPacket;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -39,6 +41,9 @@ public class WebSocketPacketManager {
         packetClasses.put("test_bot", TestBotPacket.class);
         packetClasses.put("update_settings", UpdateSettingsPacket.class);
         packetClasses.put("test_webhook", TestWebhookPacket.class);
+        packetClasses.put("new_task", NewTaskPacket.class);
+        packetClasses.put("delete_task", DeleteTaskPacket.class);
+        packetClasses.put("need_items", NeedItemsPacket.class);
     }
 
 }

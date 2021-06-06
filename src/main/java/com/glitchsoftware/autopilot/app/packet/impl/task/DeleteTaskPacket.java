@@ -1,4 +1,4 @@
-package com.glitchsoftware.autopilot.app.packet.impl;
+package com.glitchsoftware.autopilot.app.packet.impl.task;
 
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.PacketManifest;
@@ -7,13 +7,13 @@ import lombok.Getter;
 
 /**
  * @author Brennan
- * @since 6/4/2021
+ * @since 6/5/2021
  **/
-@PacketManifest("test_webhook")
+@PacketManifest("delete_task")
 @Getter
-public class TestWebhookPacket extends Packet {
+public class DeleteTaskPacket extends Packet {
 
-    @SerializedName("type")
-    private int type;
+    @SerializedName("id")
+    private String id;
 
 }

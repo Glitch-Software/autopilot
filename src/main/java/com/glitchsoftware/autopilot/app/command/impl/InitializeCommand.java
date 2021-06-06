@@ -20,8 +20,8 @@ public class InitializeCommand extends Command {
         if(AutoPilot.INSTANCE.getCurrentUser() != null) {
             System.out.println("sending user info");
             AutoPilot.INSTANCE.getWebSocket().send(new InitializedPacket(AutoPilot.INSTANCE.getCurrentUser(),
-                    AutoPilot.INSTANCE.getProfitableItems(),
-                    AutoPilot.INSTANCE.getBotManager().getBotsAsJSON()));
+                    AutoPilot.INSTANCE.getBotManager().getBotsAsJSON(),
+                    AutoPilot.INSTANCE.getTaskManager().getAsJSON()));
         } else {
             AutoPilot.INSTANCE.getWebSocket().send(new InitializedPacket());
             //AutoPilot.INSTANCE.getSocketConnection().send(new AuthPacket(((AuthenticatePacket) packet).getLicense(), "test"));

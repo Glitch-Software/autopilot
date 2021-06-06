@@ -113,4 +113,13 @@ public class BotManager {
             e.printStackTrace();
         }
     }
+
+    public Bot getBotByName(String name) {
+        for(Bot bot : getBots()) {
+            if(bot.getName().equalsIgnoreCase(name))
+                return bot;
+        }
+
+        return null;
+    }
 }

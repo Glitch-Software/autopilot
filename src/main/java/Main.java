@@ -3,6 +3,12 @@ import com.glitchsoftware.autopilot.bot.impl.rest.PrismBot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Brennan
@@ -10,7 +16,7 @@ import java.io.File;
  **/
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         AutoPilot.INSTANCE.start();
 
 //        final ConnectionBot connectionBot = new PrismBot();
