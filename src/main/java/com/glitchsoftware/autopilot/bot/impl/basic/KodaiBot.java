@@ -138,13 +138,15 @@ public class KodaiBot extends BasicBot {
             try {
                 Logger.logSuccess("[Bot Kodai] - Waiting for Stop Timeout");
 
-                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
+                TimeUnit.SECONDS.sleep(5);
 
                 Logger.logSuccess("[Bot Kodai] - Stopping Tasks");
 
                 final Button stopButton = automationPanel.findButton("STOP");
                 if(stopButton != null) {
                     stopButton.click();
+                    Logger.logSuccess("[Bot Kodai] - Stopped Tasks");
+
                 }
 
                 Thread.sleep(500);

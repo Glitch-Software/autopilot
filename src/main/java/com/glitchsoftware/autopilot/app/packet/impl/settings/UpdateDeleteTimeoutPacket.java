@@ -14,5 +14,5 @@ import lombok.Getter;
 public class UpdateDeleteTimeoutPacket extends Packet {
 
     @SerializedName("delete_timeout")
-    private long timeout;
+    private int timeout;
 }

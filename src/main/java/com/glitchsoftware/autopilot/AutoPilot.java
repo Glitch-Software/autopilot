@@ -110,6 +110,7 @@ public enum AutoPilot {
 
             @Override
             public void onDisconnect(SocketConnection client) {
+                System.out.println("?");
                 System.exit(-1);
             }
         });

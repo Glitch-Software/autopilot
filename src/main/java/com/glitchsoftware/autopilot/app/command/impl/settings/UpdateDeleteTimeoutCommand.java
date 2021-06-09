@@ -20,6 +20,7 @@ public class UpdateDeleteTimeoutCommand extends Command {
     public void execute(Packet packet) {
         final UpdateDeleteTimeoutPacket deleteTimeoutPacket = (UpdateDeleteTimeoutPacket) packet;
 
+        System.out.println(deleteTimeoutPacket.getTimeout());
         AutoPilot.INSTANCE.getConfig().setDeleteTimeout(deleteTimeoutPacket.getTimeout());
 
         AutoPilot.INSTANCE.getConfig().save();

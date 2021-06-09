@@ -70,10 +70,11 @@ public class SocketConnection implements Runnable {
 
                     buffer.clear();
                 } catch (Exception e) {
-                    //e.printStackTrace();
+                    if(e.getMessage().contains("An existing connection was forcibly closed by the remote host")) {
+                        socketListener.onDisconnect(this);
+                    }
                 }
 
-                //socketListener.onDisconnect(this);
                 this.delayReconnection();
                 continue reconnect;
             }
