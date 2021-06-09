@@ -43,7 +43,7 @@ public class PrismBot extends ConnectionBot {
 
         try {
             if(getAutomation().findPane("PrismAIO") == null) {
-                Logger.logInfo("Launching PrismAIO");
+                Logger.logInfo("[Bot Prism] - Launching PrismAIO");
                 final Application application =
                         new Application(
                                 new ElementBuilder()
@@ -54,14 +54,14 @@ public class PrismBot extends ConnectionBot {
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
             }
 
-            Logger.logInfo("Waiting for PrismAIO");
+            Logger.logInfo("[Bot Prism] - Waiting for PrismAIO");
             Panel prismPanel = getAutomation().findPane("PrismAIO");
             while (prismPanel == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
             }
-            Logger.logSuccess("Found Prism");
+            Logger.logSuccess("[Bot Prism] - Found Prism");
 
-            Logger.logInfo("Waiting for PrismAIO to load");
+            Logger.logInfo("[Bot Prism] - Waiting for PrismAIO to load");
             Button homeButton = prismPanel.findButton("Logo");
             while (homeButton == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
@@ -69,28 +69,28 @@ public class PrismBot extends ConnectionBot {
                 if(prismPanel != null)
                     homeButton = prismPanel.findButton("Logo");
             }
-            Logger.logSuccess("Prism loaded");
+            Logger.logSuccess("[Bot Prism] - Prism loaded");
 
             final String link = String.format("https://www.%s/product/~/%s.html", site, sku);
 
-            Logger.logInfo("Sending SKU to Prism API");
+            Logger.logInfo("[Bot Prism] - Sending SKU to Prism API");
             if(send(link)) {
-                Logger.logSuccess("Sent to API");
+                Logger.logSuccess("[Bot Prism] - Sent to API");
                 prismPanel.getElement().setFocus();
 
                 Thread.sleep(500);
 
-                Logger.logInfo("Finding table");
+                Logger.logInfo("[Bot Prism] - Finding table");
                 AutomationBase table = null;
                 for(AutomationBase automationBase : prismPanel.getChildren(true)) {
                     if(automationBase.getAriaRole().equalsIgnoreCase("grid")) {
                         table = automationBase;
-                        Logger.logSuccess("Found table");
+                        Logger.logSuccess("[Bot Prism] - Found table");
                     }
                 }
                 Thread.sleep(500);
 
-                prismPanel.getButton("Stop All").click();
+                prismPanel.getButton("[Bot Prism] - Stop All").click();
 
                 AutomationBase firstRow = table.getChildren(true).get(0);
                 firstRow.invoke();
@@ -98,7 +98,7 @@ public class PrismBot extends ConnectionBot {
                 final Robot robot = new Robot();
                 robot.setAutoDelay(10);
 
-                Logger.logInfo("Duplicating tasks " + taskQuantity);
+                Logger.logInfo("[Bot Prism] - Duplicating tasks (" + taskQuantity + ")");
                 for(int i = 0; i < taskQuantity; i++) {
                     robot.keyPress(KeyEvent.VK_CONTROL);
                     robot.keyPress(KeyEvent.VK_D);
@@ -112,7 +112,7 @@ public class PrismBot extends ConnectionBot {
 
                 Thread.sleep(500);
 
-                Logger.logInfo("Starting all tasks");
+                Logger.logInfo("[Bot Prism] - Starting all tasks");
                 prismPanel.getButton("Start All").click();
 
                 AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(prismPanel));
@@ -155,15 +155,17 @@ public class PrismBot extends ConnectionBot {
         @Override
         public void run() {
             try {
-                TimeUnit.SECONDS.sleep(5);
+                Logger.logSuccess("[Bot Prism] - Waiting for Stop Timeout");
 
-                Logger.logInfo("Stopping all tasks");
+                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
+
+                Logger.logInfo("[Bot Prism] - Stopping all tasks");
                 panel.getButton("Stop All").click();
 
-                Logger.logInfo("Deleting all tasks");
+                Logger.logInfo("[Bot Prism] - Deleting all tasks");
                 panel.getButton("Delete All").click();
 
-                Logger.logSuccess("Deleted all tasks");
+                Logger.logSuccess("[Bot Prism] - Deleted all tasks");
             } catch (Exception e) {
                 e.printStackTrace();
             }

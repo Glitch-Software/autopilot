@@ -41,7 +41,31 @@ public class PingCommand extends Command {
                         if(bot instanceof RestBot) {
 
                         } else {
-                            ((BasicBot) bot).runBot(SiteDetector.getURL(pingPacket.getSite()), task.getSku(), task.getTaskQuantity());
+
+                            String siteGroup = "footlockerus";
+
+                            switch (SiteDetector.getURL(pingPacket.getSite())) {
+                                case "footlocker.com":
+                                    siteGroup = "footlockerus";
+                                    break;
+                                case "footlocker.ca":
+                                    siteGroup = "footlockerca";
+                                    break;
+                                case "kidsfootlocker.com":
+                                    siteGroup = "kidsfootlocker";
+                                    break;
+                                case "footaction.com":
+                                    siteGroup = "footaction";
+                                    break;
+                                case "champssports.com":
+                                    siteGroup = "champssports";
+                                    break;
+                                case "eastbay.com":
+                                    siteGroup = "eastbay";
+                                    break;
+                            }
+
+                            ((BasicBot) bot).runBot(siteGroup, task.getSku(), task.getTaskQuantity());
                         }
                     }
                 }

@@ -167,7 +167,7 @@ public class KylinBot extends ConnectionBot {
         @Override
         public void run() {
             try {
-                TimeUnit.MINUTES.sleep(6);
+                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
                 delete();
             } catch (Exception e) {

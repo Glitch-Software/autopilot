@@ -19,29 +19,6 @@ public class KodaiBot extends BasicBot {
     @Override
     public boolean runBot(String site, String sku, int taskQuantity) {
         try {
-            String groupName = "footlockerus";
-
-            switch (site) {
-                case "footlocker.com":
-                    groupName = "footlockerus";
-                    break;
-                case "footlocker.ca":
-                    groupName = "footlockerca";
-                    break;
-                case "kidsfootlocker.com":
-                    groupName = "kidsfootlocker";
-                    break;
-                case "footaction.com":
-                    groupName = "footaction";
-                    break;
-                case "champssports.com":
-                    groupName = "champssports";
-                    break;
-                case "eastbay.com":
-                    groupName = "eastbay";
-                    break;
-            }
-
             if(getAutomation().findPane("Kodai") == null) {
                 Logger.logInfo("[Bot Kodai] - Launching Kodai");
                 final Application application =
@@ -65,7 +42,7 @@ public class KodaiBot extends BasicBot {
 
             Logger.logInfo("[Bot Kodai] - Found Kodai to load");
 
-            if(kodaiPanel.findButton(groupName) == null) {
+            if(kodaiPanel.findButton(site) == null) {
                 TextBox automationTextBox = null;
                 while (automationTextBox == null) {
                     kodaiPanel = getAutomation().findPane("Kodai");
@@ -78,8 +55,8 @@ public class KodaiBot extends BasicBot {
 
             Thread.sleep(500);
 
-            Logger.logInfo("[Bot Kodai] - Finding Group");
-            kodaiPanel.getButton(groupName).click();
+            Logger.logInfo("[Bot Kodai] - Finding Site Group");
+            kodaiPanel.getButton(site).click();
             Thread.sleep(500);
             final EditBox automationEditBox = kodaiPanel.getEditBox(0);
             automationEditBox.setValue(sku);
@@ -161,7 +138,7 @@ public class KodaiBot extends BasicBot {
             try {
                 Logger.logSuccess("[Bot Kodai] - Waiting for Stop Timeout");
 
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
                 Logger.logSuccess("[Bot Kodai] - Stopping Tasks");
 
