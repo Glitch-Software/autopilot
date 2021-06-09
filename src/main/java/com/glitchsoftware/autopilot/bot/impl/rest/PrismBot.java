@@ -8,7 +8,6 @@ import com.glitchsoftware.autopilot.util.Logger;
 import com.google.gson.JsonObject;
 import mmarquee.automation.controls.*;
 import mmarquee.automation.controls.Button;
-import mmarquee.automation.controls.Image;
 import mmarquee.automation.controls.Panel;
 import okhttp3.Request;
 import okhttp3.RequestBody;

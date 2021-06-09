@@ -12,9 +12,31 @@ import mmarquee.automation.controls.*;
 public class WhatBotBot extends BasicBot {
 
     @Override
-    public boolean runBot(String site, String sku, String groupName, int taskQuantity) {
-
+    public boolean runBot(String site, String sku, int taskQuantity) {
         try {
+            String groupName = "footlockerus";
+
+            switch (site) {
+                case "footlocker.com":
+                    groupName = "footlockerus";
+                    break;
+                case "footlocker.ca":
+                    groupName = "footlockerca";
+                    break;
+                case "kidsfootlocker.com":
+                    groupName = "kidsfootlocker";
+                    break;
+                case "footaction.com":
+                    groupName = "footaction";
+                    break;
+                case "champssports.com":
+                    groupName = "champssports";
+                    break;
+                case "eastbay.com":
+                    groupName = "eastbay";
+                    break;
+            }
+
             if(getAutomation().findPane("What Bot") == null) {
                 final Application application =
                         new Application(

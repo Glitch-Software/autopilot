@@ -21,6 +21,7 @@ public class InitializeCommand extends Command {
             System.out.println("sending user info");
             AutoPilot.INSTANCE.getWebSocket().send(new InitializedPacket(AutoPilot.INSTANCE.getCurrentUser(),
                     AutoPilot.INSTANCE.getConfig().getWebHooks().getDiscordWebhook(),
+                    AutoPilot.INSTANCE.getConfig().getDeleteTimeout(),
                     AutoPilot.INSTANCE.getBotManager().getBotsAsJSON(),
                     AutoPilot.INSTANCE.getTaskManager().getAsJSON()));
         } else {

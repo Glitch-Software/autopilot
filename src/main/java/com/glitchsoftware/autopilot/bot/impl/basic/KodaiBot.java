@@ -17,8 +17,31 @@ import java.util.concurrent.TimeUnit;
 public class KodaiBot extends BasicBot {
 
     @Override
-    public boolean runBot(String site, String sku, String groupName, int taskQuantity) {
+    public boolean runBot(String site, String sku, int taskQuantity) {
         try {
+            String groupName = "footlockerus";
+
+            switch (site) {
+                case "footlocker.com":
+                    groupName = "footlockerus";
+                    break;
+                case "footlocker.ca":
+                    groupName = "footlockerca";
+                    break;
+                case "kidsfootlocker.com":
+                    groupName = "kidsfootlocker";
+                    break;
+                case "footaction.com":
+                    groupName = "footaction";
+                    break;
+                case "champssports.com":
+                    groupName = "champssports";
+                    break;
+                case "eastbay.com":
+                    groupName = "eastbay";
+                    break;
+            }
+
             if(getAutomation().findPane("Kodai") == null) {
                 Logger.logInfo("[Bot Kodai] - Launching Kodai");
                 final Application application =
@@ -41,14 +64,17 @@ public class KodaiBot extends BasicBot {
             kodaiPanel.getElement().setFocus();
 
             Logger.logInfo("[Bot Kodai] - Found Kodai to load");
-            TextBox automationTextBox = null;
-            while (automationTextBox == null) {
-                kodaiPanel = getAutomation().findPane("Kodai");
-                if(kodaiPanel != null)
-                    automationTextBox = kodaiPanel.findBox("RELEASES");
+
+            if(kodaiPanel.findButton(groupName) == null) {
+                TextBox automationTextBox = null;
+                while (automationTextBox == null) {
+                    kodaiPanel = getAutomation().findPane("Kodai");
+                    if(kodaiPanel != null)
+                        automationTextBox = kodaiPanel.findBox("RELEASES");
+                }
+                automationTextBox.invoke();
             }
             Logger.logInfo("[Bot Kodai] - Kodai loaded");
-            automationTextBox.invoke();
 
             Thread.sleep(500);
 

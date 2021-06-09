@@ -29,7 +29,6 @@ public class BotConnectionCommand extends Command {
         if(bot != null) {
             if(bot instanceof ConnectionBot) {
                 //# TODO add bot connection stuff again
-                System.out.println(bot.getName());
                 new BotConnection(bot.getName(), ((ConnectionBot) bot));
             }
 

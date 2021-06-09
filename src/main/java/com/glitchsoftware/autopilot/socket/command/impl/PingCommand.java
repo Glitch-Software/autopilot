@@ -41,8 +41,7 @@ public class PingCommand extends Command {
                         if(bot instanceof RestBot) {
 
                         } else {
-//                            ((BasicBot) bot).runBot(SiteDetector.getURL(pingPacket.getSite()), task.getSku(), "",
-//                                    task.getTaskQuantity());
+                            ((BasicBot) bot).runBot(SiteDetector.getURL(pingPacket.getSite()), task.getSku(), task.getTaskQuantity());
                         }
                     }
                 }
