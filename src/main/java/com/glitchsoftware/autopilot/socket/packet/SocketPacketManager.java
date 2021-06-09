@@ -1,9 +1,6 @@
 package com.glitchsoftware.autopilot.socket.packet;
 
-import com.glitchsoftware.autopilot.socket.packet.impl.AuthenticatedPacket;
-import com.glitchsoftware.autopilot.socket.packet.impl.HandshakePacket;
-import com.glitchsoftware.autopilot.socket.packet.impl.PingPacket;
-import com.glitchsoftware.autopilot.socket.packet.impl.ProfitableItemsPacket;
+import com.glitchsoftware.autopilot.socket.packet.impl.*;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -30,10 +27,9 @@ public class SocketPacketManager {
         packetClasses.put("handshake", HandshakePacket.class);
         packetClasses.put("ping", PingPacket.class);
         packetClasses.put("authenticated", AuthenticatedPacket.class);
-        packetClasses.put("profitable_items", ProfitableItemsPacket.class);
-
-//        packetClasses.put("handshake", HandshakePacket.class);
-//        packetClasses.put("authenticate", AuthPacket.class);
+        packetClasses.put("profitable_item", ProfitableItemPacket.class);
+        packetClasses.put("error", ErrorPacket.class);
+        packetClasses.put("successfully_deactivated", SuccessfullyDeactivatedPacket.class);
     }
 
 }

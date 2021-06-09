@@ -4,6 +4,7 @@ import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.PacketManifest;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Brennan
@@ -11,6 +12,7 @@ import lombok.Getter;
  **/
 @PacketManifest("ping")
 @Getter
+@NoArgsConstructor
 public class PingPacket extends Packet {
 
     @SerializedName("site")

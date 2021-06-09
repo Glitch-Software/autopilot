@@ -1,4 +1,4 @@
-package com.glitchsoftware.autopilot.app.command.impl;
+package com.glitchsoftware.autopilot.app.command.impl.settings;
 
 import club.minnced.discord.webhook.WebhookClient;
 import com.glitchsoftware.autopilot.AutoPilot;
@@ -24,6 +24,8 @@ public class UpdateSettingsCommand extends Command {
         AutoPilot.INSTANCE.getConfig()
                 .getWebHooks()
                 .setDiscordWebhook(updateSettingsPacket.getDiscordWebhook());
+
+        AutoPilot.INSTANCE.getConfig().save();
 
         AutoPilot.INSTANCE.setDiscordWebhook(WebhookClient.withUrl(AutoPilot.INSTANCE
                 .getConfig()

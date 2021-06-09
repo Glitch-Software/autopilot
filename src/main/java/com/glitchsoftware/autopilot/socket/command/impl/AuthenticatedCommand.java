@@ -1,6 +1,7 @@
 package com.glitchsoftware.autopilot.socket.command.impl;
 
 import com.glitchsoftware.autopilot.AutoPilot;
+import com.glitchsoftware.autopilot.app.packet.impl.InitializedPacket;
 import com.glitchsoftware.autopilot.socket.SocketConnection;
 import com.glitchsoftware.autopilot.socket.command.Command;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
@@ -22,11 +23,18 @@ public class AuthenticatedCommand extends Command {
         final AuthenticatedPacket authenticatedPacket = (AuthenticatedPacket) packet;
 
         if(AutoPilot.INSTANCE.getCurrentUser() == null) {
+            AutoPilot.INSTANCE.getConfig().getAuth().setLicense(authenticatedPacket.getUser().getLicense());
+            AutoPilot.INSTANCE.getConfig().save();
             AutoPilot.INSTANCE.setCurrentUser(authenticatedPacket.getUser());
 
             Utils.setProfitableItems();
 
-            System.out.println(AutoPilot.INSTANCE.getProfitableItems().size());
+            if(!AutoPilot.INSTANCE.getWebSocket().isAuthed()) {
+                AutoPilot.INSTANCE.getWebSocket().send(new InitializedPacket(AutoPilot.INSTANCE.getCurrentUser(),
+                        AutoPilot.INSTANCE.getConfig().getWebHooks().getDiscordWebhook(),
+                        AutoPilot.INSTANCE.getBotManager().getBotsAsJSON(),
+                        AutoPilot.INSTANCE.getTaskManager().getAsJSON()));
+            }
         }
     }
 }

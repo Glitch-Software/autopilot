@@ -1,23 +1,22 @@
 package com.glitchsoftware.autopilot.socket.packet.impl;
 
-import com.glitchsoftware.autopilot.socket.model.User;
+import com.glitchsoftware.autopilot.socket.model.ProfitableItem;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.PacketManifest;
-import com.google.gson.JsonElement;
-import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
  * @author Brennan
- * @since 5/30/2021
+ * @since 6/7/2021
  **/
-@PacketManifest("authenticated")
+@PacketManifest("profitable_item")
 @Getter
 @NoArgsConstructor
-public class AuthenticatedPacket extends Packet {
+public class ProfitableItemPacket extends Packet {
 
-    @SerializedName("user")
-    private User user;
+    private ProfitableItem profitableItem;
+
+
 
 }

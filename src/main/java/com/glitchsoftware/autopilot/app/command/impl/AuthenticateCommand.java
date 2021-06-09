@@ -5,6 +5,7 @@ import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.AuthenticatePacket;
 import com.glitchsoftware.autopilot.socket.packet.impl.AuthPacket;
+import com.glitchsoftware.autopilot.util.Utils;
 
 /**
  * @author Brennan
@@ -19,7 +20,6 @@ public class AuthenticateCommand extends Command {
 
     @Override
     public void execute(Packet packet) {
-        System.out.println("authenticating");
-        AutoPilot.INSTANCE.getSocketConnection().send(new AuthPacket(((AuthenticatePacket) packet).getLicense(), "test"));
+        AutoPilot.INSTANCE.getSocketConnection().send(new AuthPacket(((AuthenticatePacket) packet).getLicense(), Utils.getHWID()));
     }
 }

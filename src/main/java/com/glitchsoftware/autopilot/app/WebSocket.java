@@ -24,6 +24,8 @@ public class WebSocket {
      */
     private Session session;
 
+    private boolean authed = false;
+
     /**
      * Starts our websocket and initializes the endpoint "/socket" with our handler {@link WebSocketHandler}
      * also sets our port to 8080 and initializes Spark

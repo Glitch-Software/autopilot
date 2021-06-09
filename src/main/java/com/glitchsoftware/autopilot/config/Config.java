@@ -31,6 +31,9 @@ public class Config {
     @SerializedName("discord_rich_presence")
     private boolean discordRPC = true;
 
+    @SerializedName("delete_timeout")
+    private long deleteTimeout = 6;
+
     @SerializedName("selected_language")
     private String selectedLanguage = "en";
 
@@ -61,6 +64,7 @@ public class Config {
 
                 final JsonObject jsonObject = AutoPilot.INSTANCE.getGSON().fromJson(bufferedReader.readLine(), JsonObject.class);
 
+                this.setDeleteTimeout(jsonObject.get("delete_timeout").getAsLong());
                 this.setDiscordRPC(jsonObject.get("discord_rich_presence").getAsBoolean());
                 this.setSelectedLanguage(jsonObject.get("selected_language").getAsString());
                 this.getWebHooks().setDiscordWebhook(jsonObject.getAsJsonObject("web_hooks").get("discord_webhook").getAsString());

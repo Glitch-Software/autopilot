@@ -9,7 +9,10 @@ import com.google.gson.annotations.SerializedName;
  * @since 6/5/2021
  **/
 @PacketManifest("profitable_item")
-public class ProfitableItemPacket extends Packet {
+public class NewProfitableItemPacket extends Packet {
+
+    @SerializedName("added")
+    private long added;
 
     @SerializedName("name")
     private String name;
@@ -23,7 +26,8 @@ public class ProfitableItemPacket extends Packet {
     @SerializedName("image")
     private String image;
 
-    public ProfitableItemPacket(String name, String sku, String stockX, String image) {
+    public NewProfitableItemPacket(long added, String name, String sku, String stockX, String image) {
+        this.added = added;
         this.name = name;
         this.sku = sku;
         this.stockX = stockX;

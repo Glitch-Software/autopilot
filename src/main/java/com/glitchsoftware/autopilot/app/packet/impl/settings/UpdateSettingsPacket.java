@@ -13,6 +13,9 @@ import lombok.Getter;
 @Getter
 public class UpdateSettingsPacket extends Packet {
 
+    @SerializedName("delete_timeout")
+    private long deleteTimeout;
+
     @SerializedName("discord_webhook")
     private String discordWebhook;
 }

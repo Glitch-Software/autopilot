@@ -2,19 +2,23 @@ package com.glitchsoftware.autopilot.socket.packet.impl;
 
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.PacketManifest;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Brennan
- * @since 5/30/2021
+ * @since 6/8/2021
  **/
-@PacketManifest("profitable_items")
+@PacketManifest("error")
+@NoArgsConstructor
 @Getter
-public class ProfitableItemsPacket extends Packet {
+public class ErrorPacket extends Packet {
 
-    @SerializedName("items")
-    private JsonElement itemsElement;
+    @SerializedName("type")
+    private String type;
+
+    @SerializedName("message")
+    private String message;
 
 }

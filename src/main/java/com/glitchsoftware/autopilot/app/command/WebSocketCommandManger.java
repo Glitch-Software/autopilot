@@ -5,6 +5,9 @@ import com.glitchsoftware.autopilot.app.command.impl.bot.BotConnectionCommand;
 import com.glitchsoftware.autopilot.app.command.impl.bot.TestBotCommand;
 import com.glitchsoftware.autopilot.app.command.impl.bot.UpdateBotCommand;
 import com.glitchsoftware.autopilot.app.command.impl.items.NeedItemsPacket;
+import com.glitchsoftware.autopilot.app.command.impl.settings.DeactivateCommand;
+import com.glitchsoftware.autopilot.app.command.impl.settings.TestWebhookCommand;
+import com.glitchsoftware.autopilot.app.command.impl.settings.UpdateSettingsCommand;
 import com.glitchsoftware.autopilot.app.command.impl.task.DeleteTaskCommand;
 import com.glitchsoftware.autopilot.app.command.impl.task.NewTaskCommand;
 import com.glitchsoftware.autopilot.app.command.impl.task.UpdateTaskCommand;
@@ -33,5 +36,7 @@ public class WebSocketCommandManger {
         commands.add(new DeleteTaskCommand());
         commands.add(new NeedItemsPacket());
         commands.add(new UpdateTaskCommand());
+        commands.add(new AuthedCommand());
+        commands.add(new DeactivateCommand());
     }
 }

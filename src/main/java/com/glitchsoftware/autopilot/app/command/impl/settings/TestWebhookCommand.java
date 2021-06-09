@@ -1,4 +1,4 @@
-package com.glitchsoftware.autopilot.app.command.impl;
+package com.glitchsoftware.autopilot.app.command.impl.settings;
 
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.app.command.Command;

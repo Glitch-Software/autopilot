@@ -18,6 +18,9 @@ public class InitializedPacket extends Packet {
     @SerializedName("user")
     private User user;
 
+    @SerializedName("discord_webhook")
+    private String discordWebhook;
+
     @SerializedName("bots")
     private JsonArray bots;
 
@@ -27,8 +30,9 @@ public class InitializedPacket extends Packet {
     public InitializedPacket() {
     }
 
-    public InitializedPacket(User user, JsonArray bots, JsonArray tasks) {
+    public InitializedPacket(User user, String discordWebhook, JsonArray bots, JsonArray tasks) {
         this.user = user;
+        this.discordWebhook = discordWebhook;
         this.bots = bots;
         this.tasks = tasks;
     }

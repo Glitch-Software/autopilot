@@ -1,9 +1,6 @@
 package com.glitchsoftware.autopilot.socket.command;
 
-import com.glitchsoftware.autopilot.socket.command.impl.AuthenticatedCommand;
-import com.glitchsoftware.autopilot.socket.command.impl.HandshakeCommand;
-import com.glitchsoftware.autopilot.socket.command.impl.PingCommand;
-import com.glitchsoftware.autopilot.socket.command.impl.ProfitableItemsCommand;
+import com.glitchsoftware.autopilot.socket.command.impl.*;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -21,7 +18,9 @@ public class SocketCommandManager {
         commands.add(new HandshakeCommand());
         commands.add(new PingCommand());
         commands.add(new AuthenticatedCommand());
-        commands.add(new ProfitableItemsCommand());
+        commands.add(new ProfitableItemCommand());
+        commands.add(new ErrorCommand());
+        commands.add(new SuccessfullyDeactivatedCommand());
     }
 }
 

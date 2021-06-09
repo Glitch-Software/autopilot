@@ -1,7 +1,9 @@
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.impl.rest.PrismBot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.util.Utils;
 
+import javax.swing.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -17,6 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+//        if(!System.getProperty("os.name").contains("win")) {
+//            JOptionPane.showMessageDialog(null, "Glitch only cusu");
+//            return;
+//        }
+        System.out.println(System.getProperty("os.name").contains("win"));
         AutoPilot.INSTANCE.start();
 
 //        final ConnectionBot connectionBot = new PrismBot();

@@ -9,6 +9,7 @@ import com.glitchsoftware.autopilot.socket.packet.impl.PingPacket;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.Base64;
 
 /**
  * @author Brennan
@@ -39,20 +40,26 @@ public class Embeds {
         embedBuilder.setColor(new Color(0x30E29B).getRGB());
         embedBuilder.setTimestamp(Instant.now());
 
-        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle("Monitor found " + product.getSku(), ""));
-        embedBuilder.setThumbnailUrl(product.getImage());
+        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle("Starting Task " + product.getSku(), ""));
+        embedBuilder.setThumbnailUrl(new String(Base64.getDecoder().decode(product.getImage())));
         embedBuilder.setDescription(String.format("[%s](%s)", product.getName(), product.getUrl()));
 
         embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Price", product.getPrice()));
         embedBuilder.addField(new WebhookEmbed.EmbedField(false, "SKU", product.getSku()));
+
+//        final StringBuilder botBuilder = new StringBuilder();
+//
+//        for(String bot : bots) {
+//            botBuilder.append(bot).append("\n");
+//        }
+//
+//        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Bots", botBuilder.toString()));
 
         final WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
         webhookMessageBuilder.setUsername("Glitch: AutoPilot");
         webhookMessageBuilder.setAvatarUrl("https://cdn.discordapp.com/attachments/700223049466904641/838133373208625152/logo.png");
         webhookMessageBuilder.addEmbeds(embedBuilder.build());
 
-        WebhookClient
-                .withUrl("https://discord.com/api/webhooks/848035698685771786/1DjxbfHRzsx8mwi94zJV0S0CNm9kdZBpdD03CdMK0yc86KFm5kNncZBG-qiqQ3g6HIGy")
-                .send(webhookMessageBuilder.build());
+        AutoPilot.INSTANCE.getDiscordWebhook().send(webhookMessageBuilder.build());
     }
 }

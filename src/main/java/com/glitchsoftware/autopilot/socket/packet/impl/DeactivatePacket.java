@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Brennan
- * @since 5/28/2021
+ * @since 6/8/2021
  **/
-@PacketManifest("handshake")
+@PacketManifest("deactivate")
 @NoArgsConstructor
-public class HandshakePacket extends Packet {
+public class DeactivatePacket extends Packet {
 }
