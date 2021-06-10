@@ -10,6 +10,6 @@ import com.glitchsoftware.autopilot.bot.AbstractBot;
  **/
 public abstract class BasicBot extends AbstractBot {
 
-    public abstract boolean runBot(String site, String sku, String groupName, int taskQuantity);
+    public abstract boolean runBot(String site, String sku, int taskQuantity);
 
 }

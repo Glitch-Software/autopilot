@@ -11,7 +11,7 @@ public enum SiteDetector {
     FOOTLOCKER_US("Footlocker US", "footlocker.com"),
     FOOTLOCKER_CA("Footlocker CA", "footlocker.ca"),
     KIDS_FOOTLOCKER("Kids Footlocker", "kidsfootlocker.com"),
-    FOOTACTION("Footaction", "kidsfootlocker.com"),
+    FOOTACTION("Footaction", "footaction.com"),
     CHAMPS("Champs Sports", "champssports.com"),
     EASYBAY("Eastbay", "eastbay.com");
 

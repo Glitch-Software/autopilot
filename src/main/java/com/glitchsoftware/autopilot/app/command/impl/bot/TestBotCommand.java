@@ -28,7 +28,7 @@ public class TestBotCommand extends Command {
             if(bot instanceof ConnectionBot) {
                 ((ConnectionBot) bot).runBot("footlocker", "glitchtest", 1);
             } else {
-                ((BasicBot) bot).runBot("footlocker", "glitchtest", "test", 1);
+                ((BasicBot) bot).runBot("footlocker.com", "glitchtest", 1);
             }
 
             Logger.logSuccess("[Bot Test] - " + bot.getName());

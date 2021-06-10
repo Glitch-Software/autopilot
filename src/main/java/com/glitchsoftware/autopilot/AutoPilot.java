@@ -102,7 +102,6 @@ public enum AutoPilot {
 
             @Override
             public void onReceivePacket(Packet packet, SocketConnection client) {
-                System.out.println(packet.getName());
                 for(Command command : getSocketCommandManager().getCommands()) {
                     if(command.getPacketName().equalsIgnoreCase(packet.getName()))
                         command.execute(packet, client);
@@ -111,8 +110,8 @@ public enum AutoPilot {
 
             @Override
             public void onDisconnect(SocketConnection client) {
-                System.out.println("disconnected?");
-                //System.exit(-1);
+                System.out.println("?");
+                System.exit(-1);
             }
         });
 

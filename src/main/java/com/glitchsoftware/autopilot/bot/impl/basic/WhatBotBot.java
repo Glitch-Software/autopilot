@@ -12,9 +12,9 @@ import mmarquee.automation.controls.*;
 public class WhatBotBot extends BasicBot {
 
     @Override
-    public boolean runBot(String site, String sku, String groupName, int taskQuantity) {
-
+    public boolean runBot(String site, String sku, int taskQuantity) {
         try {
+
             if(getAutomation().findPane("What Bot") == null) {
                 final Application application =
                         new Application(
@@ -35,7 +35,7 @@ public class WhatBotBot extends BasicBot {
             Hyperlink currentRelease = null;
 
             while (currentRelease == null) {
-                currentRelease = whatBotPanel.findHyperLink(groupName);
+                currentRelease = whatBotPanel.findHyperLink(site);
             }
             currentRelease.invoke();
             Thread.sleep(500);

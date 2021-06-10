@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class KodaiBot extends BasicBot {
 
     @Override
-    public boolean runBot(String site, String sku, String groupName, int taskQuantity) {
+    public boolean runBot(String site, String sku, int taskQuantity) {
         try {
             if(getAutomation().findPane("Kodai") == null) {
                 Logger.logInfo("[Bot Kodai] - Launching Kodai");
@@ -41,19 +41,22 @@ public class KodaiBot extends BasicBot {
             kodaiPanel.getElement().setFocus();
 
             Logger.logInfo("[Bot Kodai] - Found Kodai to load");
-            TextBox automationTextBox = null;
-            while (automationTextBox == null) {
-                kodaiPanel = getAutomation().findPane("Kodai");
-                if(kodaiPanel != null)
-                    automationTextBox = kodaiPanel.findBox("RELEASES");
+
+            if(kodaiPanel.findButton(site) == null) {
+                TextBox automationTextBox = null;
+                while (automationTextBox == null) {
+                    kodaiPanel = getAutomation().findPane("Kodai");
+                    if(kodaiPanel != null)
+                        automationTextBox = kodaiPanel.findBox("RELEASES");
+                }
+                automationTextBox.invoke();
             }
             Logger.logInfo("[Bot Kodai] - Kodai loaded");
-            automationTextBox.invoke();
 
             Thread.sleep(500);
 
-            Logger.logInfo("[Bot Kodai] - Finding Group");
-            kodaiPanel.getButton(groupName).click();
+            Logger.logInfo("[Bot Kodai] - Finding Site Group");
+            kodaiPanel.getButton(site).click();
             Thread.sleep(500);
             final EditBox automationEditBox = kodaiPanel.getEditBox(0);
             automationEditBox.setValue(sku);
@@ -142,6 +145,8 @@ public class KodaiBot extends BasicBot {
                 final Button stopButton = automationPanel.findButton("STOP");
                 if(stopButton != null) {
                     stopButton.click();
+                    Logger.logSuccess("[Bot Kodai] - Stopped Tasks");
+
                 }
 
                 Thread.sleep(500);

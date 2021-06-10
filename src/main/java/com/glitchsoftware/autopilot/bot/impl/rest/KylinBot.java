@@ -9,11 +9,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;
-import lombok.Setter;
 import mmarquee.automation.controls.Application;
 import mmarquee.automation.controls.ElementBuilder;
 import mmarquee.automation.controls.Panel;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -169,7 +167,7 @@ public class KylinBot extends ConnectionBot {
         @Override
         public void run() {
             try {
-                TimeUnit.MINUTES.sleep(6);
+                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
                 delete();
             } catch (Exception e) {

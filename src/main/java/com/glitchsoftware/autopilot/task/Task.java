@@ -40,6 +40,7 @@ public class Task {
         jsonObject.addProperty("id", getId());
         jsonObject.addProperty("sku", getSku());
         jsonObject.addProperty("active", isActive());
+        jsonObject.addProperty("task_quantity", getTaskQuantity());
 
         final JsonArray jsonArray = new JsonArray();
 
@@ -56,10 +57,13 @@ public class Task {
             setId(jsonObject.get("id").getAsString());
 
         if(jsonObject.has("sku"))
-            setSku(jsonObject.get("sku").toString());
+            setSku(jsonObject.get("sku").getAsString());
 
         if(jsonObject.has("active"))
             setActive(jsonObject.get("active").getAsBoolean());
+
+        if(jsonObject.has("task_quantity"))
+            setTaskQuantity(jsonObject.get("task_quantity").getAsInt());
 
         if(jsonObject.has("bots")) {
             final JsonArray jsonArray = jsonObject.getAsJsonArray("bots");

@@ -7,12 +7,12 @@ import lombok.Getter;
 
 /**
  * @author Brennan
- * @since 6/4/2021
+ * @since 6/8/2021
  **/
-@PacketManifest("update_settings")
+@PacketManifest("update_delete_timeout")
 @Getter
-public class UpdateSettingsPacket extends Packet {
+public class UpdateDeleteTimeoutPacket extends Packet {
 
-    @SerializedName("discord_webhook")
-    private String discordWebhook;
+    @SerializedName("delete_timeout")
+    private int timeout;
 }
