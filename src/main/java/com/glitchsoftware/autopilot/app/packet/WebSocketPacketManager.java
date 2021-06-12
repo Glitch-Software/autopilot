@@ -9,7 +9,6 @@ import com.glitchsoftware.autopilot.app.packet.impl.items.NeedItemsPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.settings.DeactivatePacket;
 import com.glitchsoftware.autopilot.app.packet.impl.settings.TestWebhookPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.settings.UpdateDeleteTimeoutPacket;
-import com.glitchsoftware.autopilot.app.packet.impl.settings.UpdateSettingsPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.DeleteTaskPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.NewTaskPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.UpdateTaskPacket;
@@ -44,7 +43,6 @@ public class WebSocketPacketManager {
         packetClasses.put("bot_connection", BotConnectionPacket.class);
         packetClasses.put("update_bot", UpdateBotPacket.class);
         packetClasses.put("test_bot", TestBotPacket.class);
-        packetClasses.put("update_settings", UpdateSettingsPacket.class);
         packetClasses.put("test_webhook", TestWebhookPacket.class);
         packetClasses.put("new_task", NewTaskPacket.class);
         packetClasses.put("delete_task", DeleteTaskPacket.class);
@@ -53,6 +51,7 @@ public class WebSocketPacketManager {
         packetClasses.put("deactivate", DeactivatePacket.class);
         packetClasses.put("disconnect_bot", DisconnectBotPacket.class);
         packetClasses.put("update_delete_timeout", UpdateDeleteTimeoutPacket.class);
+        packetClasses.put("close", ClosePacket.class);
     }
 
 }

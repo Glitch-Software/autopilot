@@ -5,7 +5,7 @@ import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.UpdateBotPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 
 import java.io.File;
 

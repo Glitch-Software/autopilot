@@ -4,6 +4,7 @@ import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.annotations.RestManifest;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -58,6 +59,8 @@ public class KylinBot extends ConnectionBot {
 
         try {
             if(getAutomation().findPane("Kylin") == null) {
+                Logger.logInfo("[Kylin] - Launching....");
+
                 final Application application =
                         new Application(
                                 new ElementBuilder()
@@ -68,13 +71,19 @@ public class KylinBot extends ConnectionBot {
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
             }
 
-            Panel whatBotPanel = getAutomation().findPane("Kylin");
-            while (whatBotPanel == null) {
-                whatBotPanel = getAutomation().findPane("Kylin");
+            Logger.logInfo("[Kylin] - Waiting...");
+            Panel kylinPanel = getAutomation().findPane("Kylin");
+            while (kylinPanel == null) {
+                kylinPanel = getAutomation().findPane("Kylin");
             }
+            Logger.logSuccess("[Kylin] - Found");
+
+            Logger.logInfo("[Kylin] - Sending SKU to API with quantity of (" + taskQuantity + ")");
 
             for(int i = 0; i < taskQuantity; i++)
                 send(String.format("https://www.%s/product/~/%s.html", site, sku), sku);
+
+            Logger.logSuccess("[Kylin] - Sent to API");
 
             AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread());
 
@@ -167,9 +176,15 @@ public class KylinBot extends ConnectionBot {
         @Override
         public void run() {
             try {
+                Logger.logInfo("[Kylin] - Waiting for Stop Timeout");
+
                 TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
+                Logger.logInfo("[Kylin] - Deleting Tasks");
+
                 delete();
+
+                Logger.logSuccess("[Kylin] - Deleted Tasks");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -5,7 +5,7 @@ import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.task.DeleteTaskPacket;
 import com.glitchsoftware.autopilot.task.Task;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 
 /**
  * @author Brennan

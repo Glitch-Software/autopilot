@@ -9,9 +9,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,7 +31,7 @@ public class Utils {
     public static void setProfitableItems() {
         try {
             final Request request = new Request.Builder()
-                    .url("http://127.0.0.1/api/profitable_items/")
+                    .url("http://167.71.89.120:8080/api/profitable_items/")
                     .get()
                     .build();
 
@@ -82,5 +84,33 @@ public class Utils {
         }
 
         return buffer.toString();
+    }
+
+
+    public static boolean isProcessRunning(String processName) {
+        try {
+            final Process proc = Runtime.getRuntime().exec("wmic.exe");
+            final BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            final OutputStreamWriter oStream = new OutputStreamWriter(proc.getOutputStream());
+            oStream.write(String.format("process where name='%s'", processName));
+            oStream.flush();
+            oStream.close();
+
+            String line;
+            final StringBuilder builder = new StringBuilder();
+            while ((line = input.readLine()) != null) {
+                builder.append(line);
+            }
+            input.close();
+            oStream.close();
+            proc.destroy();
+
+            return builder.toString().contains(processName);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 package com.glitchsoftware.autopilot.bot;
 
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
+import com.glitchsoftware.autopilot.util.logger.BotLogger;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import mmarquee.automation.UIAutomation;
@@ -24,12 +25,16 @@ public abstract class AbstractBot implements Bot {
      */
     private final UIAutomation automation = UIAutomation.getInstance();
 
+    private BotLogger logger;
+
     /**
      * Our base constructor that gets our {@link BotManifest} to get our name
      */
     public AbstractBot() {
         if(getClass().isAnnotationPresent(BotManifest.class)) {
             this.name = getClass().getAnnotation(BotManifest.class).value();
+
+            this.logger = new BotLogger(name);
         }
     }
 

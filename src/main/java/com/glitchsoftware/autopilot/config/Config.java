@@ -29,7 +29,7 @@ public class Config {
     private Auth auth = new Auth();
 
     @SerializedName("discord_rich_presence")
-    private boolean discordRPC = true;
+    private boolean discordRPC = false;
 
     @SerializedName("delete_timeout")
     private int deleteTimeout = 6;

@@ -4,7 +4,7 @@ import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.settings.UpdateDeleteTimeoutPacket;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 
 /**
  * @author Brennan
@@ -20,7 +20,6 @@ public class UpdateDeleteTimeoutCommand extends Command {
     public void execute(Packet packet) {
         final UpdateDeleteTimeoutPacket deleteTimeoutPacket = (UpdateDeleteTimeoutPacket) packet;
 
-        System.out.println(deleteTimeoutPacket.getTimeout());
         AutoPilot.INSTANCE.getConfig().setDeleteTimeout(deleteTimeoutPacket.getTimeout());
 
         AutoPilot.INSTANCE.getConfig().save();

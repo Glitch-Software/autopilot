@@ -2,12 +2,13 @@ package com.glitchsoftware.autopilot.app;
 
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.serializer.Serializer;
-import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
-import org.eclipse.jetty.websocket.api.Session;
+import org.webbitserver.WebServer;
+import org.webbitserver.WebServers;
+import org.webbitserver.WebSocketConnection;
+import org.webbitserver.handler.StaticFileHandler;
 
-import static spark.Spark.*;
 
 /**
  * @author Brennan
@@ -22,7 +23,7 @@ public class WebSocket {
     /**
      * Our websocket session
      */
-    private Session session;
+    private WebSocketConnection session;
 
     private boolean authed = false;
 
@@ -31,15 +32,18 @@ public class WebSocket {
      * also sets our port to 8080 and initializes Spark
      */
     public void start() {
-        webSocket("", new WebSocketHandler());
-        port(4317);
-        init();
+        WebServer webServer = WebServers.createWebServer(4317)
+                .add("/ws", new WebSocketHandler())
+                .add(new StaticFileHandler("/web"));
+        webServer.start();
+        System.out.println("App running on " + webServer.getPort());
     }
+
 
     public void send(Packet packet) {
         try {
             if(session != null)
-                session.getRemote().sendString(Serializer.serialize(packet));
+                session.send(Serializer.serialize(packet));
         } catch (Exception e) {
         }
     }

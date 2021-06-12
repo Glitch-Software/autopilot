@@ -29,6 +29,16 @@ public class PingPacket extends Packet {
 
     @Getter
     public static class PingProduct {
-        private String name, image, sku, price, url;
+        private String name, image;
+    }
+
+    @Override
+    public String toString() {
+        return "PingPacket{" +
+                "site='" + site + '\'' +
+                ", sku='" + sku + '\'' +
+                ", product=" + product +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

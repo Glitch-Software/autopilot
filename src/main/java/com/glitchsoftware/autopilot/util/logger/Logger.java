@@ -1,4 +1,4 @@
-package com.glitchsoftware.autopilot.util;
+package com.glitchsoftware.autopilot.util.logger;
 
 import com.diogonunes.jcolor.Ansi;
 import com.diogonunes.jcolor.Attribute;

@@ -9,6 +9,7 @@ import com.glitchsoftware.autopilot.socket.packet.impl.PingPacket;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Base64;
 
 /**
@@ -34,26 +35,30 @@ public class Embeds {
         AutoPilot.INSTANCE.getDiscordWebhook().send(webhookMessageBuilder.build());
     }
 
-    public static void sendTaskStarted(PingPacket.PingProduct product) {
+    public static void sendTaskStarted(PingPacket.PingProduct product, String sku, String siteName, String url, String[] bots) {
         final WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder();
 
         embedBuilder.setColor(new Color(0x30E29B).getRGB());
         embedBuilder.setTimestamp(Instant.now());
 
-        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle("Starting Task " + product.getSku(), ""));
+        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle(String.format("[%s] Starting Task", siteName), ""));
         embedBuilder.setThumbnailUrl(new String(Base64.getDecoder().decode(product.getImage())));
-        embedBuilder.setDescription(String.format("[%s](%s)", product.getName(), product.getUrl()));
+        embedBuilder.setDescription(String.format("[%s](%s)", product.getName(), url));
 
-        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Price", product.getPrice()));
-        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "SKU", product.getSku()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "SKU", sku));
 
-//        final StringBuilder botBuilder = new StringBuilder();
-//
-//        for(String bot : bots) {
-//            botBuilder.append(bot).append("\n");
-//        }
-//
-//        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Bots", botBuilder.toString()));
+        final StringBuilder botBuilder = new StringBuilder();
+
+        botBuilder.append("```");
+        for(String bot : bots) {
+            botBuilder.append(bot);
+
+            if(Arrays.asList(bots).indexOf(bot) < bots.length - 1)
+                botBuilder.append(",");
+        }
+        botBuilder.append("```");
+
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Bots", botBuilder.toString()));
 
         final WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
         webhookMessageBuilder.setUsername("Glitch: AutoPilot");

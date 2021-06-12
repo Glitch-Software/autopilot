@@ -8,9 +8,10 @@ import com.glitchsoftware.autopilot.socket.SocketConnection;
 import com.glitchsoftware.autopilot.socket.command.Command;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.impl.PingPacket;
+import com.glitchsoftware.autopilot.socket.packet.impl.PublicSuccessPacket;
 import com.glitchsoftware.autopilot.task.Task;
 import com.glitchsoftware.autopilot.util.Embeds;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 import com.glitchsoftware.autopilot.util.SiteDetector;
 
 /**
@@ -27,24 +28,25 @@ public class PingCommand extends Command {
     public void execute(Packet packet, SocketConnection client) {
         final PingPacket pingPacket = (PingPacket) packet;
 
-        System.out.println(pingPacket.getProduct().getName());
-
         for(Task task : AutoPilot.INSTANCE.getTaskManager().getTasks()) {
-            if(task.getSku().contains(pingPacket.getSku()) && task.isActive()) {
+            if(task.getSku().equalsIgnoreCase(pingPacket.getSku()) && task.isActive()) {
+                final String site = SiteDetector.getURL(pingPacket.getSite());
+                final String formattedURL = String.format("https://%s/~/%s.html", site, pingPacket.getSku());
                 Logger.logSuccess("[SKU IN-STOCK] - " + task.getSku());
-                //Embeds.sendTaskStarted(pingPacket.getProduct());
                 for(String botName : task.getBots()) {
                     final Bot bot = AutoPilot.INSTANCE.getBotManager().getBotByName(botName);
+
+                    Embeds.sendTaskStarted(pingPacket.getProduct(), pingPacket.getSku(), pingPacket.getSite(), formattedURL, task.getBots());
 
                     if(bot != null) {
                         Logger.logSuccess("[Task Started] - " + bot.getName() + " - " + task.getSku());
                         if(bot instanceof RestBot) {
-
+                            ((RestBot) bot).runBot(site, task.getSku(), task.getTaskQuantity());
                         } else {
 
                             String siteGroup = "footlockerus";
 
-                            switch (SiteDetector.getURL(pingPacket.getSite())) {
+                            switch (site) {
                                 case "footlocker.com":
                                     siteGroup = "footlockerus";
                                     break;
@@ -67,6 +69,10 @@ public class PingCommand extends Command {
 
                             ((BasicBot) bot).runBot(siteGroup, task.getSku(), task.getTaskQuantity());
                         }
+
+                        AutoPilot.INSTANCE.getSocketConnection().send(new PublicSuccessPacket(botName,
+                                pingPacket.getSku(), pingPacket.getProduct().getName(), pingPacket.getProduct().getImage(),
+                                formattedURL));
                     }
                 }
             }

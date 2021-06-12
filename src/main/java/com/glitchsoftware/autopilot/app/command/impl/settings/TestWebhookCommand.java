@@ -1,11 +1,12 @@
 package com.glitchsoftware.autopilot.app.command.impl.settings;
 
+import club.minnced.discord.webhook.WebhookClient;
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.app.command.Command;
 import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.settings.TestWebhookPacket;
 import com.glitchsoftware.autopilot.util.Embeds;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 
 /**
  * @author Brennan
@@ -23,19 +24,20 @@ public class TestWebhookCommand extends Command {
 
         switch (testWebhookPacket.getType()) {
             case 1:
-                if(!AutoPilot.INSTANCE.getConfig()
+                AutoPilot.INSTANCE.getConfig()
                         .getWebHooks()
-                        .getDiscordWebhook()
-                        .isEmpty()) {
-                    final String webHook = AutoPilot.INSTANCE.getConfig().getWebHooks().getDiscordWebhook();
+                        .setDiscordWebhook(testWebhookPacket.getWebhookUrl());
 
-                    if(webHook.contains("discord")
-                            &&
-                            webHook.contains("webhooks")) {
-                        Embeds.sendTestWebhook();
+                AutoPilot.INSTANCE.getConfig().save();
 
-                        Logger.logSuccess("[Discord Webhook] Sent Test");
-                    }
+                AutoPilot.INSTANCE.setDiscordWebhook(WebhookClient.withUrl(AutoPilot.INSTANCE
+                        .getConfig()
+                        .getWebHooks().getDiscordWebhook()));
+
+                if(testWebhookPacket.getWebhookUrl().contains("discord") && testWebhookPacket.getWebhookUrl().contains("webhooks")) {
+                    Embeds.sendTestWebhook();
+
+                    Logger.logSuccess("[Discord Webhook] Sent Test");
                 }
                 break;
             case 2:

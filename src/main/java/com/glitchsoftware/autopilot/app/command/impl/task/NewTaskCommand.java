@@ -7,7 +7,7 @@ import com.glitchsoftware.autopilot.app.packet.impl.task.AddTaskPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.NewTaskPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
 import com.glitchsoftware.autopilot.task.Task;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 
 import java.util.LinkedList;
 import java.util.List;

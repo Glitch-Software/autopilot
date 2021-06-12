@@ -7,7 +7,7 @@ import com.glitchsoftware.autopilot.app.packet.impl.bot.TestBotPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 
 /**
  * @author Brennan
@@ -28,7 +28,7 @@ public class TestBotCommand extends Command {
             if(bot instanceof ConnectionBot) {
                 ((ConnectionBot) bot).runBot("footlocker", "glitchtest", 1);
             } else {
-                ((BasicBot) bot).runBot("footlocker.com", "glitchtest", 1);
+                ((BasicBot) bot).runBot("footlockerus", "glitchtest", 1);
             }
 
             Logger.logSuccess("[Bot Test] - " + bot.getName());

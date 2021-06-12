@@ -6,6 +6,11 @@ import com.glitchsoftware.autopilot.socket.command.Command;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.impl.AuthPacket;
 import com.glitchsoftware.autopilot.util.Utils;
+import mmarquee.automation.UIAutomation;
+import mmarquee.automation.controls.Application;
+import mmarquee.automation.controls.ElementBuilder;
+
+import java.io.File;
 
 
 /**
@@ -20,7 +25,37 @@ public class HandshakeCommand extends Command {
 
     @Override
     public void execute(Packet packet, SocketConnection client) {
+        //startApplication();
+
+        AutoPilot.INSTANCE.getWebSocket().start();
+
         if(!AutoPilot.INSTANCE.getConfig().getAuth().getLicense().isEmpty())
             client.send(new AuthPacket(AutoPilot.INSTANCE.getConfig().getAuth().getLicense(), Utils.getHWID()));
+    }
+
+    private void startApplication() {
+        try {
+            UIAutomation automation = UIAutomation.getInstance();
+
+            if(automation.findPane("glitch-autopilot") == null) {
+                System.out.println("Application not found starting");
+                final String userDir = System.getProperty("user.dir") + File.separator + "app" + File.separator;
+
+                final File uiFile = new File(userDir, "Glitch.exe");
+
+                final Application application =
+                        new Application(
+                                new ElementBuilder()
+                                        .automation(automation)
+                                        .applicationPath(uiFile.getAbsolutePath()));
+                application.launchOrAttach();
+
+                application.waitForInputIdle(Application.SHORT_TIMEOUT);
+            }
+
+            automation = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

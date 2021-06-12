@@ -2,6 +2,7 @@ package com.glitchsoftware.autopilot.bot.impl.basic;
 
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 import mmarquee.automation.controls.*;
 
 /**
@@ -16,6 +17,8 @@ public class WhatBotBot extends BasicBot {
         try {
 
             if(getAutomation().findPane("What Bot") == null) {
+                Logger.logInfo("[WhatBot] - Launching...");
+
                 final Application application =
                         new Application(
                                 new ElementBuilder()
@@ -26,6 +29,7 @@ public class WhatBotBot extends BasicBot {
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
             }
 
+            Logger.logInfo("[WhatBot] - Waiting...");
             Panel whatBotPanel = getAutomation().findPane("What Bot");
             while (whatBotPanel == null) {
                 whatBotPanel = getAutomation().findPane("What Bot");

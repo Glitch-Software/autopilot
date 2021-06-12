@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import com.glitchsoftware.autopilot.app.WebSocket;
 import com.glitchsoftware.autopilot.app.command.WebSocketCommandManger;
 import com.glitchsoftware.autopilot.app.packet.WebSocketPacketManager;
+import com.glitchsoftware.autopilot.app.packet.impl.ClosingPacket;
 import com.glitchsoftware.autopilot.bot.BotManager;
 import com.glitchsoftware.autopilot.config.Config;
 import com.glitchsoftware.autopilot.socket.SocketConnection;
@@ -79,10 +80,11 @@ public enum AutoPilot {
         this.botManager = new BotManager();
         this.taskManager = new TaskManager();
         startSocket();
-        webSocket.start();
 
         if(config.isDiscordRPC())
             setupDiscordRPC();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> getWebSocket().send(new ClosingPacket())));
     }
 
     public void save() {
@@ -90,18 +92,18 @@ public enum AutoPilot {
     }
 
     private void startSocket() {
+        //167.71.89.120
         this.socketConnection = new SocketConnection("127.0.0.1", 1337);
 
         this.socketConnection.setSocketListener(new SocketListener() {
             @Override
             public void onConnect(SocketConnection client) {
-                System.out.println("Connected!");
-
                 client.send(new HandshakePacket());
             }
 
             @Override
             public void onReceivePacket(Packet packet, SocketConnection client) {
+                System.out.println(packet.getName());
                 for(Command command : getSocketCommandManager().getCommands()) {
                     if(command.getPacketName().equalsIgnoreCase(packet.getName()))
                         command.execute(packet, client);
@@ -110,7 +112,7 @@ public enum AutoPilot {
 
             @Override
             public void onDisconnect(SocketConnection client) {
-                System.out.println("?");
+                getWebSocket().send(new ClosingPacket());
                 System.exit(-1);
             }
         });

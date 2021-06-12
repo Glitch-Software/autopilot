@@ -2,6 +2,7 @@ package com.glitchsoftware.autopilot.util;
 
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 import com.google.gson.JsonParser;
 import com.teamdev.jxbrowser.browser.Browser;
 import com.teamdev.jxbrowser.engine.Engine;

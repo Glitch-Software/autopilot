@@ -3,9 +3,8 @@ package com.glitchsoftware.autopilot.bot.impl.basic;
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.BotLogger;
 import mmarquee.automation.controls.*;
-import sun.rmi.runtime.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +19,7 @@ public class KodaiBot extends BasicBot {
     public boolean runBot(String site, String sku, int taskQuantity) {
         try {
             if(getAutomation().findPane("Kodai") == null) {
-                Logger.logInfo("[Bot Kodai] - Launching Kodai");
+                getLogger().info("Launching...");
                 final Application application =
                         new Application(
                                 new ElementBuilder()
@@ -29,19 +28,20 @@ public class KodaiBot extends BasicBot {
                 application.launchOrAttach();
 
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
+
+                System.out.println(application.getIsAttached());
             }
 
-            Logger.logInfo("[Bot Kodai] - Waiting for Kodai");
+            getLogger().info("Waiting...");
             Panel kodaiPanel = getAutomation().findPane("Kodai");
             while (kodaiPanel == null) {
                 kodaiPanel = getAutomation().findPane("Kodai");
             }
-            Logger.logInfo("[Bot Kodai] - Found Kodai");
+            getLogger().info("Found!");
 
             kodaiPanel.getElement().setFocus();
 
-            Logger.logInfo("[Bot Kodai] - Found Kodai to load");
-
+            getLogger().info("Loading...");
             if(kodaiPanel.findButton(site) == null) {
                 TextBox automationTextBox = null;
                 while (automationTextBox == null) {
@@ -51,22 +51,30 @@ public class KodaiBot extends BasicBot {
                 }
                 automationTextBox.invoke();
             }
-            Logger.logInfo("[Bot Kodai] - Kodai loaded");
+            getLogger().info("Loaded");
 
             Thread.sleep(500);
 
-            Logger.logInfo("[Bot Kodai] - Finding Site Group");
-            kodaiPanel.getButton(site).click();
+            getLogger().info("Finding Site Group");
+
+            final Button button = kodaiPanel.findButton(site);
+
+            if(button == null) {
+                getLogger().error("Failed to find site group (" + site + "). Please follow our setup guides!");
+                return false;
+            }
+            button.click();
+
             Thread.sleep(500);
             final EditBox automationEditBox = kodaiPanel.getEditBox(0);
             automationEditBox.setValue(sku);
-            Logger.logInfo("[Bot Kodai] - Inputting SKU");
+            getLogger().info("Inputting SKU");
 
             int saveIndex = 0;
 
             java.util.List<AutomationBase> children = kodaiPanel.getChildren(true);
 
-            Logger.logInfo("[Bot Kodai] - Finding Button Indexes");
+            getLogger().info("Finding Button Indexes");
             for (final AutomationBase automationBase : children) {
                 if (automationBase instanceof Button) {
                     if (automationBase.getName().equalsIgnoreCase("SAVE CHANGES")) {
@@ -77,21 +85,21 @@ public class KodaiBot extends BasicBot {
                     saveIndex++;
                 }
             }
-            Logger.logInfo("[Bot Kodai] - Found Button indexes");
+            getLogger().info("Found Button indexes");
 
             Thread.sleep(500);
 
-            Logger.logInfo("[Bot Kodai] - Creating Tasks");
+            getLogger().info("Creating Tasks");
             kodaiPanel.getButton(saveIndex + 1).click();
 
             Thread.sleep(500);
 
-            Logger.logInfo("[Bot Kodai] - Setting Profiles");
+            getLogger().info("Setting Profiles");
             kodaiPanel.getCheckBox("USE ALL PROFILES.").toggle();
 
             Thread.sleep(500);
 
-            Logger.logInfo("[Bot Kodai] - Setting Size");
+            getLogger().info("Setting Size");
 
             final TextBox textBox = kodaiPanel.getTextBox("Size");
             textBox.invoke();
@@ -101,20 +109,20 @@ public class KodaiBot extends BasicBot {
             final List automationList = kodaiPanel.getList(4);
             automationList.getChildren(true).get(3).invoke();
 
-            Logger.logInfo("[Bot Kodai] - Setting Quantity");
+            getLogger().info("Setting Quantity (" + taskQuantity + ")");
             final Spinner automationSpinner = kodaiPanel.getSpinner("1");
             automationSpinner.setValue(String.valueOf(taskQuantity));
 
-            Logger.logSuccess("[Bot Kodai] - Created Tasks");
             kodaiPanel.getButton("CREATE TASK").click();
             kodaiPanel.getButton("GO BACK").click();
+            getLogger().success("Created Tasks");
 
             kodaiPanel.getButton("SAVE CHANGES").click();
 
-            Logger.logSuccess("[Bot Kodai] - Started Tasks");
+            getLogger().success("[Kodai] - Started Tasks");
             kodaiPanel.getButton("START").click();
 
-            AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(kodaiPanel, saveIndex + 4));
+            AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(kodaiPanel, site, saveIndex + 4, getLogger()));
 
             return true;
         } catch (Exception e) {
@@ -124,29 +132,42 @@ public class KodaiBot extends BasicBot {
         return false;
     }
 
+
     private static class DeleteThread implements Runnable {
         private final Panel automationPanel;
+        private final String group;
         private final int index;
 
-        public DeleteThread(Panel automationPanel, int index) {
+        private final BotLogger botLogger;
+
+        public DeleteThread(Panel automationPanel, String group, int index, BotLogger botLogger) {
             this.automationPanel = automationPanel;
+            this.group = group;
             this.index = index;
+            this.botLogger = botLogger;
         }
 
         @Override
         public void run() {
             try {
-                Logger.logSuccess("[Bot Kodai] - Waiting for Stop Timeout");
+                botLogger.success("Waiting for Stop Timeout");
 
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
-                Logger.logSuccess("[Bot Kodai] - Stopping Tasks");
+                final Button button = automationPanel.findButton(group);
+
+                if(button == null) {
+                    botLogger.error("Failed to find (" + group + ") button!");
+                    return;
+                }
+                button.click();
+
+                botLogger.success("Stopping Tasks");
 
                 final Button stopButton = automationPanel.findButton("STOP");
                 if(stopButton != null) {
                     stopButton.click();
-                    Logger.logSuccess("[Bot Kodai] - Stopped Tasks");
-
+                    botLogger.success("Stopped Tasks");
                 }
 
                 Thread.sleep(500);
@@ -155,11 +176,11 @@ public class KodaiBot extends BasicBot {
 
                 Thread.sleep(500);
 
-                Logger.logSuccess("[Bot Kodai] - Deleting Tasks");
+                botLogger.success("Deleting Tasks");
 
                 automationPanel.getButton("YES, DELETE THEM ALL.").click();
 
-                Logger.logSuccess("[Bot Kodai] - Resetting SKU");
+                botLogger.success("Resetting SKU");
 
                 final EditBox automationEditBox = automationPanel.getEditBox(0);
                 automationEditBox.setValue("");

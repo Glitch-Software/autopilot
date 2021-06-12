@@ -16,4 +16,7 @@ public class TestWebhookPacket extends Packet {
     @SerializedName("type")
     private int type;
 
+    @SerializedName("webhook_url")
+    private String webhookUrl;
+
 }

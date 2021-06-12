@@ -7,7 +7,7 @@ import com.glitchsoftware.autopilot.app.packet.impl.bot.BotConnectionPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
 import com.glitchsoftware.autopilot.util.BotConnection;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 
 import java.io.File;
 
@@ -28,7 +28,6 @@ public class BotConnectionCommand extends Command {
 
         if(bot != null) {
             if(bot instanceof ConnectionBot) {
-                //# TODO add bot connection stuff again
                 new BotConnection(bot.getName(), ((ConnectionBot) bot));
             }
 

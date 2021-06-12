@@ -52,6 +52,9 @@ public class SocketConnection implements Runnable {
                 this.delayReconnection();
                 continue reconnect;
             } catch (InterruptedException | ExecutionException e) {
+                if(e.getMessage().contains("he remote computer refused the network connection.")) {
+                    System.exit(-1);
+                }
                 e.printStackTrace();
             }
 
@@ -70,6 +73,7 @@ public class SocketConnection implements Runnable {
 
                     buffer.clear();
                 } catch (Exception e) {
+                    System.out.println(e.getMessage());
                     if(e.getMessage().contains("An existing connection was forcibly closed by the remote host")) {
                         socketListener.onDisconnect(this);
                     }
@@ -85,6 +89,7 @@ public class SocketConnection implements Runnable {
     }
 
     public void send(Packet input) {
+        System.out.println("sending? " + input.getName());
         final ByteBuffer buffer = ByteBuffer.wrap(Serializer.serialize(input).getBytes());;
 
         client.write(buffer);
