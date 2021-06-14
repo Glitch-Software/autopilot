@@ -3,13 +3,13 @@ package com.glitchsoftware.autopilot.bot.impl.basic;
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
-import com.glitchsoftware.autopilot.util.Logger;
+import com.glitchsoftware.autopilot.task.Task;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 import mmarquee.automation.UIAutomation;
 import mmarquee.automation.controls.*;
 import mmarquee.automation.controls.Button;
 import mmarquee.automation.controls.Container;
 import mmarquee.automation.controls.Panel;
-//import sun.rmi.runtime.Log;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class WrathBot extends BasicBot {
 
     @Override
-    public boolean runBot(String site, String sku, String groupName, int taskQuantity) {
+    public boolean runBot(String site, Task task) {
         try {
             if(getAutomation().findPane("Wrath AIO") == null) {
                 Logger.logInfo("[Bot Wrath] - Launching Wrath");
@@ -83,7 +83,7 @@ public class WrathBot extends BasicBot {
             r.keyRelease(KeyEvent.VK_ENTER);
             Thread.sleep(300);
 
-            edits.get(2).setValue(sku);
+            edits.get(2).setValue(task.getSku());
 
             edits.get(5).setValue("Random");
             Thread.sleep(200);
@@ -93,7 +93,7 @@ public class WrathBot extends BasicBot {
 
             ArrayList<Spinner> spinners = childrenOfType(wrath, Spinner.class);
             Spinner taskQty = spinners.get(0);
-            taskQty.setValue(taskQuantity+"");
+            taskQty.setValue(task.getTaskQuantity()+"");
             Thread.sleep(500);
 
             //Create all tasks

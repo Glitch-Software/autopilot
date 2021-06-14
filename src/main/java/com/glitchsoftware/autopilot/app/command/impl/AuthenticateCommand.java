@@ -20,6 +20,7 @@ public class AuthenticateCommand extends Command {
 
     @Override
     public void execute(Packet packet) {
-        AutoPilot.INSTANCE.getSocketConnection().send(new AuthPacket(((AuthenticatePacket) packet).getLicense(), Utils.getHWID()));
+        AutoPilot.INSTANCE.getSocketConnection().send(new AuthPacket(((AuthenticatePacket) packet).getLicense(),
+                Utils.getHWID()));
     }
 }

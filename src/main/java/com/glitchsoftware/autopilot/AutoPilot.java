@@ -40,6 +40,8 @@ import java.util.concurrent.Executors;
 public enum AutoPilot {
     INSTANCE;
 
+    private final String VERSION = "1.0.3";
+
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
     private final File botsFile = new File(baseFile, "bots");
 
@@ -70,6 +72,8 @@ public enum AutoPilot {
     @Setter
     private JsonArray profitableItems;
 
+    private IPCClient client;
+
     public void start() {
         if(!baseFile.exists())
             baseFile.mkdirs();
@@ -93,7 +97,7 @@ public enum AutoPilot {
 
     private void startSocket() {
         //167.71.89.120
-        this.socketConnection = new SocketConnection("127.0.0.1", 1337);
+        this.socketConnection = new SocketConnection("167.71.89.120", 1337);
 
         this.socketConnection.setSocketListener(new SocketListener() {
             @Override
@@ -103,7 +107,6 @@ public enum AutoPilot {
 
             @Override
             public void onReceivePacket(Packet packet, SocketConnection client) {
-                System.out.println(packet.getName());
                 for(Command command : getSocketCommandManager().getCommands()) {
                     if(command.getPacketName().equalsIgnoreCase(packet.getName()))
                         command.execute(packet, client);
@@ -120,9 +123,12 @@ public enum AutoPilot {
         new Thread(socketConnection).start();
     }
 
-    private void setupDiscordRPC() {
-        final IPCClient client = new IPCClient(842570241464598539L);
+    public void shutdownRPC() {
+        client.close();
+    }
 
+    public void setupDiscordRPC() {
+        client = new IPCClient(842570241464598539L);
         client.setListener(new IPCListener() {
             @Override
             public void onReady(IPCClient client) {

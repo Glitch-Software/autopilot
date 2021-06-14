@@ -31,7 +31,9 @@ public class AuthenticatedCommand extends Command {
 
             if(!AutoPilot.INSTANCE.getWebSocket().isAuthed()) {
                 AutoPilot.INSTANCE.getWebSocket().send(new InitializedPacket(AutoPilot.INSTANCE.getCurrentUser(),
+                        AutoPilot.INSTANCE.getVERSION(),
                         AutoPilot.INSTANCE.getConfig().getWebHooks().getDiscordWebhook(),
+                        AutoPilot.INSTANCE.getConfig().isDiscordRPC(),
                         AutoPilot.INSTANCE.getConfig().getDeleteTimeout(),
                         AutoPilot.INSTANCE.getBotManager().getBotsAsJSON(),
                         AutoPilot.INSTANCE.getTaskManager().getAsJSON()));

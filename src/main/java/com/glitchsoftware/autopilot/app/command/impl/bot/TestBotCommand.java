@@ -6,7 +6,9 @@ import com.glitchsoftware.autopilot.app.packet.Packet;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.TestBotPacket;
 import com.glitchsoftware.autopilot.bot.Bot;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
+import com.glitchsoftware.autopilot.bot.types.rest.RestBot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.task.Task;
 import com.glitchsoftware.autopilot.util.logger.Logger;
 
 /**
@@ -25,10 +27,11 @@ public class TestBotCommand extends Command {
         final Bot bot = AutoPilot.INSTANCE.getBotManager().getBots().get(testBotPacket.getId());
 
         if(bot != null) {
-            if(bot instanceof ConnectionBot) {
-                ((ConnectionBot) bot).runBot("footlocker", "glitchtest", 1);
+            if(bot instanceof RestBot) {
+                ((RestBot) bot).runBot("footlocker.com", "glitchtest", 1);
             } else {
-                ((BasicBot) bot).runBot("footlockerus", "glitchtest", 1);
+                ((BasicBot) bot).runBot("footlockerus", new Task("glitchtest", new String[]{bot.getName()},
+                        1));
             }
 
             Logger.logSuccess("[Bot Test] - " + bot.getName());

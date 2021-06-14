@@ -30,6 +30,7 @@ public class SocketPacketManager {
         packetClasses.put("profitable_item", ProfitableItemPacket.class);
         packetClasses.put("error", ErrorPacket.class);
         packetClasses.put("successfully_deactivated", SuccessfullyDeactivatedPacket.class);
+        packetClasses.put("remove_profitableitem", RemoveProfitableItem.class);
     }
 
 }

@@ -3,19 +3,17 @@ package com.glitchsoftware.autopilot.socket.packet.impl;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.PacketManifest;
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * @author Brennan
- * @since 5/28/2021
+ * @since 6/12/2021
  **/
-@PacketManifest("handshake")
-@NoArgsConstructor
+@PacketManifest("remove_profitableitem")
 @Getter
-public class HandshakePacket extends Packet {
+public class RemoveProfitableItem extends Packet {
 
-    @SerializedName("version")
-    private String version;
-
+    @SerializedName("sku")
+    private String sku;
 }

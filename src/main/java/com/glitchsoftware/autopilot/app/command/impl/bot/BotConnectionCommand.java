@@ -31,11 +31,13 @@ public class BotConnectionCommand extends Command {
                 new BotConnection(bot.getName(), ((ConnectionBot) bot));
             }
 
-            bot.setFile(new File(connectionPacket.getFilePath()));
+            if(!connectionPacket.getFilePath().isEmpty()) {
+                bot.setFile(new File(connectionPacket.getFilePath()));
 
-            AutoPilot.INSTANCE.getBotManager().saveBot(bot);
+                AutoPilot.INSTANCE.getBotManager().saveBot(bot);
 
-            Logger.logInfo("[Bot Add] - " + bot.getName());
+                Logger.logInfo("[Bot Add] - " + bot.getName());
+            }
         } else {
             Logger.logError("[Bot Error] Failed to find Bot(" + connectionPacket.getId() + ")");
         }

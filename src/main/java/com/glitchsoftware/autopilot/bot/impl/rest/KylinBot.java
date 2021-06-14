@@ -40,26 +40,24 @@ public class KylinBot extends ConnectionBot {
         this.license = grabLicense();
 
         if(license != null)
-            System.out.println("Grabbed Kylin License");
+            getLogger().success("Successfully grabbed license");
     }
 
     @Override
     public boolean runBot(String site, String sku, int taskQuantity) {
         if(getSessionID().isEmpty() || getSessionID() == null) {
-            JOptionPane.showMessageDialog(null, "No Kylin Session Set", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            getLogger().error("No Kylin Session Set");
             return false;
         }
 
         if(license == null) {
-            JOptionPane.showMessageDialog(null, "Failed to grab license.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            getLogger().error("Failed to grab license");
             return false;
         }
 
         try {
             if(getAutomation().findPane("Kylin") == null) {
-                Logger.logInfo("[Kylin] - Launching....");
+                getLogger().info("Launching....");
 
                 final Application application =
                         new Application(
@@ -71,19 +69,21 @@ public class KylinBot extends ConnectionBot {
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
             }
 
-            Logger.logInfo("[Kylin] - Waiting...");
+            getLogger().info("Waiting...");
             Panel kylinPanel = getAutomation().findPane("Kylin");
             while (kylinPanel == null) {
                 kylinPanel = getAutomation().findPane("Kylin");
             }
-            Logger.logSuccess("[Kylin] - Found");
+            getLogger().success("Found");
 
-            Logger.logInfo("[Kylin] - Sending SKU to API with quantity of (" + taskQuantity + ")");
+            getLogger().info("Sending SKU to API with quantity of (" + taskQuantity + ")");
+
+            final String link = String.format("https://www.%s/product/~/%s.html", site, sku);
 
             for(int i = 0; i < taskQuantity; i++)
-                send(String.format("https://www.%s/product/~/%s.html", site, sku), sku);
+                send(link, sku);
 
-            Logger.logSuccess("[Kylin] - Sent to API");
+            getLogger().success("Sent to API");
 
             AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread());
 
@@ -176,15 +176,15 @@ public class KylinBot extends ConnectionBot {
         @Override
         public void run() {
             try {
-                Logger.logInfo("[Kylin] - Waiting for Stop Timeout");
+                getLogger().info("Waiting for Delete timeout");
 
                 TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
-                Logger.logInfo("[Kylin] - Deleting Tasks");
+                getLogger().info("Deleting Tasks");
 
                 delete();
 
-                Logger.logSuccess("[Kylin] - Deleted Tasks");
+                getLogger().success("Deleted Tasks");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -36,14 +36,13 @@ public class PrismBot extends ConnectionBot {
     @Override
     public boolean runBot(String site, String sku, int taskQuantity) {
         if(getSessionID().isEmpty() || getSessionID() == null) {
-            JOptionPane.showMessageDialog(null, "No Session Prism Set", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            getLogger().error("No Session ID set");
             return false;
         }
 
         try {
             if(getAutomation().findPane("PrismAIO") == null) {
-                Logger.logInfo("[Prism] - Launching....");
+                getLogger().info("Launching....");
                 final Application application =
                         new Application(
                                 new ElementBuilder()
@@ -54,14 +53,14 @@ public class PrismBot extends ConnectionBot {
                 application.waitForInputIdle(Application.SHORT_TIMEOUT);
             }
 
-            Logger.logInfo("[Prism] - Waiting...");
+            getLogger().info("Waiting...");
             Panel prismPanel = getAutomation().findPane("PrismAIO");
             while (prismPanel == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
             }
-            Logger.logSuccess("[Prism] - Found");
+            getLogger().success("Found");
 
-            Logger.logInfo("[Prism] - Loading...");
+            getLogger().info("Loading...");
             Button homeButton = prismPanel.findButton("Logo");
             while (homeButton == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
@@ -69,23 +68,23 @@ public class PrismBot extends ConnectionBot {
                 if(prismPanel != null)
                     homeButton = prismPanel.findButton("Logo");
             }
-            Logger.logSuccess("[Prism] - Loaded");
+            getLogger().success("Loaded");
 
             final String link = String.format("https://www.%s/product/~/%s.html", site, sku);
 
-            Logger.logInfo("[Prism] - Sending SKU to API");
+            getLogger().info("Sending SKU to API");
             if(send(link)) {
-                Logger.logSuccess("[Prism] - Sent to API");
+                getLogger().success("Sent to API");
                 prismPanel.getElement().setFocus();
 
                 Thread.sleep(500);
 
-                Logger.logInfo("[Prism] - Finding table");
+                getLogger().info("Finding table");
                 AutomationBase table = null;
                 for(AutomationBase automationBase : prismPanel.getChildren(true)) {
                     if(automationBase.getAriaRole().equalsIgnoreCase("grid")) {
                         table = automationBase;
-                        Logger.logSuccess("[Prism] - Found table");
+                        getLogger().success("Found table");
                     }
                 }
                 Thread.sleep(500);
@@ -95,24 +94,26 @@ public class PrismBot extends ConnectionBot {
                 AutomationBase firstRow = table.getChildren(true).get(0);
                 firstRow.invoke();
 
-                final Robot robot = new Robot();
-                robot.setAutoDelay(10);
+                if(taskQuantity > 1) {
+                    final Robot robot = new Robot();
+                    robot.setAutoDelay(10);
 
-                Logger.logInfo("[Prism] - Duplicating tasks (" + taskQuantity + ")");
-                for(int i = 0; i < taskQuantity; i++) {
-                    robot.keyPress(KeyEvent.VK_CONTROL);
-                    robot.keyPress(KeyEvent.VK_D);
+                    getLogger().info("Duplicating tasks (" + taskQuantity + ")");
+                    for(int i = 0; i < taskQuantity; i++) {
+                        robot.keyPress(KeyEvent.VK_CONTROL);
+                        robot.keyPress(KeyEvent.VK_D);
 
-                    robot.keyRelease(KeyEvent.VK_CONTROL);
-                    robot.keyRelease(KeyEvent.VK_D);
-
-                    // Thread.sleep(1);
+                        robot.keyRelease(KeyEvent.VK_CONTROL);
+                        robot.keyRelease(KeyEvent.VK_D);
+                    }
+                } else {
+                    Logger.logInfo("Task Quantity is 1 skipping");
                 }
                 firstRow.invoke();
 
                 Thread.sleep(500);
 
-                Logger.logInfo("[Prism] - Starting all tasks");
+                Logger.logInfo("Starting all tasks");
                 prismPanel.getButton("Start All").click();
 
                 AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(prismPanel));
@@ -145,8 +146,8 @@ public class PrismBot extends ConnectionBot {
         return false;
     }
 
-    private static class DeleteThread implements Runnable {
-        private Panel panel;
+    private class DeleteThread implements Runnable {
+        private final Panel panel;
 
         public DeleteThread(Panel panel) {
             this.panel = panel;
@@ -155,17 +156,17 @@ public class PrismBot extends ConnectionBot {
         @Override
         public void run() {
             try {
-                Logger.logInfo("[Prism] - Waiting for Stop Timeout");
+                getLogger().info("Waiting for Stop Timeout");
 
                 TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
-                Logger.logInfo("[Prism] - Stopping all tasks");
+                getLogger().info("Stopping all tasks");
                 panel.getButton("Stop All").click();
 
-                Logger.logInfo("[Prism] - Deleting all tasks");
+                getLogger().info("Deleting all tasks");
                 panel.getButton("Delete All").click();
 
-                Logger.logSuccess("[Prism] - Deleted all tasks");
+                getLogger().success("Deleted all tasks");
             } catch (Exception e) {
                 e.printStackTrace();
             }

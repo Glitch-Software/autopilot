@@ -26,6 +26,7 @@ public class NewTaskCommand extends Command {
     public void execute(Packet packet) {
         final NewTaskPacket newTaskPacket = (NewTaskPacket) packet;
         final String sku = newTaskPacket.getSku();
+
         final int taskQuantity = newTaskPacket.getTaskQuantity();
 
         final List<String> bots = new LinkedList<>();
@@ -36,10 +37,21 @@ public class NewTaskCommand extends Command {
                 bots.add(bot.getName());
         }
 
-        final Task task = new Task(sku, bots.toArray(new String[bots.size()]), taskQuantity);
-        AutoPilot.INSTANCE.getTaskManager().addTask(task);
-        AutoPilot.INSTANCE.getWebSocket().send(new AddTaskPacket(task));
+        if (sku.contains(",")) {
+            for(String product : sku.split(",")) {
+                final Task task = new Task(product, bots.toArray(new String[bots.size()]), taskQuantity);
+                AutoPilot.INSTANCE.getTaskManager().addTask(task);
+                AutoPilot.INSTANCE.getWebSocket().send(new AddTaskPacket(task));
+            }
 
-        Logger.logInfo("[SKU ADD] - " + task.getSku());
+            Logger.logInfo("[SKU MASS ADD]- " + sku);
+        } else {
+            final Task task = new Task(sku, bots.toArray(new String[bots.size()]), taskQuantity);
+            AutoPilot.INSTANCE.getTaskManager().addTask(task);
+            AutoPilot.INSTANCE.getWebSocket().send(new AddTaskPacket(task));
+
+            Logger.logInfo("[SKU ADD] - " + task.getSku());
+        }
+
     }
 }

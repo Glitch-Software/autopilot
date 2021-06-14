@@ -101,10 +101,8 @@ public class BotManager {
             final File file = new File(AutoPilot.INSTANCE.getBotsFile(), bot.getName() + ".json");
             if(file.exists()) {
                 file.delete();
-                file.createNewFile();
-            } else {
-                file.createNewFile();
             }
+            file.createNewFile();
             final FileWriter fileWriter = new FileWriter(file);
 
             fileWriter.write(AutoPilot.INSTANCE.getGSON().toJson(bot.toJSON()));

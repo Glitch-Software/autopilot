@@ -5,11 +5,13 @@ import com.glitchsoftware.autopilot.socket.SocketConnection;
 import com.glitchsoftware.autopilot.socket.command.Command;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.impl.AuthPacket;
+import com.glitchsoftware.autopilot.socket.packet.impl.HandshakePacket;
 import com.glitchsoftware.autopilot.util.Utils;
 import mmarquee.automation.UIAutomation;
 import mmarquee.automation.controls.Application;
 import mmarquee.automation.controls.ElementBuilder;
 
+import javax.swing.*;
 import java.io.File;
 
 
@@ -25,7 +27,15 @@ public class HandshakeCommand extends Command {
 
     @Override
     public void execute(Packet packet, SocketConnection client) {
-        //startApplication();
+        final HandshakePacket handshakePacket = (HandshakePacket) packet;
+
+        if(!AutoPilot.INSTANCE.getVERSION().equals(handshakePacket.getVersion())) {
+            JOptionPane.showMessageDialog(null, "Your version is outdated! Please update to " + handshakePacket.getVersion(), "Please Update", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(-1);
+            return;
+        }
+
+        startApplication();
 
         AutoPilot.INSTANCE.getWebSocket().start();
 

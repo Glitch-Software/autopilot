@@ -14,7 +14,7 @@ public class CheckManager {
     private final Timer timer = new Timer();
 
     public CheckManager() {
-        //this.timer.schedule(new AntiDebugCheck(), 0); // #TODO comment out when using intelij
+        this.timer.schedule(new AntiDebugCheck(), 0); // #TODO comment out when using intelij
         this.executeCheck(new ProcessWalkerCheck());
     }
 

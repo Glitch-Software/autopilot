@@ -36,6 +36,9 @@ public class Embeds {
     }
 
     public static void sendTaskStarted(PingPacket.PingProduct product, String sku, String siteName, String url, String[] bots) {
+        if(AutoPilot.INSTANCE.getConfig().getWebHooks().getDiscordWebhook().isEmpty()) {
+            return;
+        }
         final WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder();
 
         embedBuilder.setColor(new Color(0x30E29B).getRGB());

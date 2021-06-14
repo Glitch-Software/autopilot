@@ -21,6 +21,7 @@ public class SocketCommandManager {
         commands.add(new ProfitableItemCommand());
         commands.add(new ErrorCommand());
         commands.add(new SuccessfullyDeactivatedCommand());
+        commands.add(new RemoveProfitableItemCommand());
     }
 }
 

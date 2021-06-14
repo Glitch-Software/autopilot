@@ -97,6 +97,8 @@ public class BotConnection {
 
         AutoPilot.INSTANCE.getBotManager().saveBot(connectionBot);
         Logger.logSuccess("[Bot Connection] - " + connectionBot.getName() + " Connected");
+
+        connectionBot.onLoad();
         this.frame.dispose();
     }
 

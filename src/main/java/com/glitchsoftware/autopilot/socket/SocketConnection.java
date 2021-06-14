@@ -66,7 +66,6 @@ public class SocketConnection implements Runnable {
 
                     final String string = new String(buffer.array()).trim();
 
-                    System.out.println(string);
                     JsonObject jsonObject = JsonParser.parseString(string).getAsJsonObject();
 
                     socketListener.onReceivePacket(Serializer.deserialize(jsonObject), this);

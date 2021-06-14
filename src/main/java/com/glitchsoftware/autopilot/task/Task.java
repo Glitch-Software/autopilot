@@ -23,6 +23,8 @@ public class Task {
     private int taskQuantity;
     private boolean active;
 
+    private boolean running = false;
+
     public Task() {
     }
 

@@ -29,16 +29,18 @@ public class PingCommand extends Command {
         final PingPacket pingPacket = (PingPacket) packet;
 
         for(Task task : AutoPilot.INSTANCE.getTaskManager().getTasks()) {
-            if(task.getSku().equalsIgnoreCase(pingPacket.getSku()) && task.isActive()) {
+            if(task.getSku().equalsIgnoreCase(pingPacket.getSku())
+                    && task.isActive()
+                    && !task.isRunning()) {
                 final String site = SiteDetector.getURL(pingPacket.getSite());
                 final String formattedURL = String.format("https://%s/~/%s.html", site, pingPacket.getSku());
                 Logger.logSuccess("[SKU IN-STOCK] - " + task.getSku());
                 for(String botName : task.getBots()) {
                     final Bot bot = AutoPilot.INSTANCE.getBotManager().getBotByName(botName);
 
-                    Embeds.sendTaskStarted(pingPacket.getProduct(), pingPacket.getSku(), pingPacket.getSite(), formattedURL, task.getBots());
-
                     if(bot != null) {
+                        Embeds.sendTaskStarted(pingPacket.getProduct(), pingPacket.getSku(), pingPacket.getSite(), formattedURL, task.getBots());
+
                         Logger.logSuccess("[Task Started] - " + bot.getName() + " - " + task.getSku());
                         if(bot instanceof RestBot) {
                             ((RestBot) bot).runBot(site, task.getSku(), task.getTaskQuantity());
@@ -66,13 +68,14 @@ public class PingCommand extends Command {
                                     siteGroup = "eastbay";
                                     break;
                             }
+                            task.setRunning(true);
 
-                            ((BasicBot) bot).runBot(siteGroup, task.getSku(), task.getTaskQuantity());
+                            if(((BasicBot) bot).runBot(siteGroup, task)) {
+                                AutoPilot.INSTANCE.getSocketConnection().send(new PublicSuccessPacket(botName,
+                                        pingPacket.getSku(), pingPacket.getProduct().getName(), pingPacket.getProduct().getImage(),
+                                        formattedURL));
+                            }
                         }
-
-                        AutoPilot.INSTANCE.getSocketConnection().send(new PublicSuccessPacket(botName,
-                                pingPacket.getSku(), pingPacket.getProduct().getName(), pingPacket.getProduct().getImage(),
-                                formattedURL));
                     }
                 }
             }

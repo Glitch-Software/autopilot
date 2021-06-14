@@ -18,8 +18,14 @@ public class InitializedPacket extends Packet {
     @SerializedName("user")
     private User user;
 
+    @SerializedName("version")
+    private String version;
+
     @SerializedName("discord_webhook")
     private String discordWebhook;
+
+    @SerializedName("rpc")
+    private boolean rpc;
 
     @SerializedName("delete_timeout")
     private long deleteTimeout;
@@ -33,9 +39,11 @@ public class InitializedPacket extends Packet {
     public InitializedPacket() {
     }
 
-    public InitializedPacket(User user, String discordWebhook, long deleteTimeout, JsonArray bots, JsonArray tasks) {
+    public InitializedPacket(User user, String version, String discordWebhook, boolean rpc, long deleteTimeout, JsonArray bots, JsonArray tasks) {
         this.user = user;
+        this.version = version;
         this.discordWebhook = discordWebhook;
+        this.rpc = rpc;
         this.deleteTimeout = deleteTimeout;
         this.bots = bots;
         this.tasks = tasks;
