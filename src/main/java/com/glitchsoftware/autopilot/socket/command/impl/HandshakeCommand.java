@@ -29,11 +29,11 @@ public class HandshakeCommand extends Command {
     public void execute(Packet packet, SocketConnection client) {
         final HandshakePacket handshakePacket = (HandshakePacket) packet;
 
-        if(!AutoPilot.INSTANCE.getVERSION().equals(handshakePacket.getVersion())) {
-            JOptionPane.showMessageDialog(null, "Your version is outdated! Please update to " + handshakePacket.getVersion(), "Please Update", JOptionPane.INFORMATION_MESSAGE);
-            System.exit(-1);
-            return;
-        }
+//        if(!AutoPilot.INSTANCE.getVERSION().equals(handshakePacket.getVersion())) {
+//            JOptionPane.showMessageDialog(null, "Your version is outdated! Please update to " + handshakePacket.getVersion(), "Please Update", JOptionPane.INFORMATION_MESSAGE);
+//            System.exit(-1);
+//            return;
+//        }
 
         startApplication();
 

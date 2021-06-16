@@ -19,15 +19,15 @@ import com.glitchsoftware.autopilot.task.TaskManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.jagrosh.discordipc.IPCClient;
-import com.jagrosh.discordipc.IPCListener;
-import com.jagrosh.discordipc.entities.RichPresence;
-import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import lombok.Getter;
 import lombok.Setter;
+import net.arikia.dev.drpc.DiscordEventHandlers;
+import net.arikia.dev.drpc.DiscordRPC;
+import net.arikia.dev.drpc.DiscordRichPresence;
 
 import java.io.File;
 import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
 public enum AutoPilot {
     INSTANCE;
 
-    private final String VERSION = "1.0.3";
+    private final String VERSION = "1.0.4";
 
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
     private final File botsFile = new File(baseFile, "bots");
@@ -72,8 +72,6 @@ public enum AutoPilot {
     @Setter
     private JsonArray profitableItems;
 
-    private IPCClient client;
-
     public void start() {
         if(!baseFile.exists())
             baseFile.mkdirs();
@@ -81,12 +79,10 @@ public enum AutoPilot {
             botsFile.mkdirs();
 
         config.load();
+        setupDiscordRPC();
         this.botManager = new BotManager();
         this.taskManager = new TaskManager();
         startSocket();
-
-        if(config.isDiscordRPC())
-            setupDiscordRPC();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> getWebSocket().send(new ClosingPacket())));
     }
@@ -124,28 +120,22 @@ public enum AutoPilot {
     }
 
     public void shutdownRPC() {
-        client.close();
+        DiscordRPC.discordShutdown();
     }
 
     public void setupDiscordRPC() {
-        client = new IPCClient(842570241464598539L);
-        client.setListener(new IPCListener() {
-            @Override
-            public void onReady(IPCClient client) {
-                final RichPresence.Builder builder = new RichPresence.Builder();
-                builder.setState("Monitoring " + new String(Character.toChars(0x1F45F)) + "...")
-                        .setDetails("1.0.0")
-                        .setStartTimestamp(OffsetDateTime.now())
-                        .setLargeImage("logo", "");
-                client.sendRichPresence(builder.build());
-            }
-        });
+        DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
+            System.out.println("Welcome " + user.username + "#" + user.discriminator + "!");
+        }).build();
+        DiscordRPC.discordInitialize("842570241464598539", handlers, true);
 
-        try {
-            client.connect();
-        } catch (NoDiscordClientException e) {
-            e.printStackTrace();
-        }
+        DiscordRichPresence rich = new DiscordRichPresence
+                .Builder("Monitoring....")
+                .setDetails("v" + getVERSION())
+                .setStartTimestamps(new Date().getTime())
+                .setBigImage("logo", "")
+                .build();
+        DiscordRPC.discordUpdatePresence(rich);
     }
 
 }

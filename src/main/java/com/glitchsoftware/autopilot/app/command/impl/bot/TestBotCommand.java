@@ -27,14 +27,16 @@ public class TestBotCommand extends Command {
         final Bot bot = AutoPilot.INSTANCE.getBotManager().getBots().get(testBotPacket.getId());
 
         if(bot != null) {
-            if(bot instanceof RestBot) {
-                ((RestBot) bot).runBot("footlocker.com", "glitchtest", 1);
-            } else {
-                ((BasicBot) bot).runBot("footlockerus", new Task("glitchtest", new String[]{bot.getName()},
-                        1));
-            }
-
             Logger.logSuccess("[Bot Test] - " + bot.getName());
+
+            AutoPilot.INSTANCE.getExecutorService().execute(() -> {
+                if(bot instanceof RestBot) {
+                    ((RestBot) bot).runBot("footlocker.com", "glitchtest", 1);
+                } else {
+                    ((BasicBot) bot).runBot("footlockerus", new Task("glitchtest", new String[]{bot.getName()},
+                            1));
+                }
+            });
         } else {
             Logger.logError("[Bot Error] Failed to find Bot(" + testBotPacket.getId() + ")");
         }

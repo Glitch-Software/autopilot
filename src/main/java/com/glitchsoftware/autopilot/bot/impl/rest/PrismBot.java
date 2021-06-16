@@ -35,7 +35,7 @@ public class PrismBot extends ConnectionBot {
 
     @Override
     public boolean runBot(String site, String sku, int taskQuantity) {
-        if(getSessionID().isEmpty() || getSessionID() == null) {
+        if(getSessionID() == null) {
             getLogger().error("No Session ID set");
             return false;
         }
@@ -61,12 +61,12 @@ public class PrismBot extends ConnectionBot {
             getLogger().success("Found");
 
             getLogger().info("Loading...");
-            Button homeButton = prismPanel.findButton("Logo");
+            Hyperlink homeButton = getHyper(prismPanel);
             while (homeButton == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
 
                 if(prismPanel != null)
-                    homeButton = prismPanel.findButton("Logo");
+                    homeButton = getHyper(prismPanel);
             }
             getLogger().success("Loaded");
 
@@ -123,6 +123,16 @@ public class PrismBot extends ConnectionBot {
         }
 
         return false;
+    }
+
+    private Hyperlink getHyper(Panel panel) {
+        try {
+            return panel.getHyperlink(1);
+        } catch (Exception  e) {
+
+        }
+
+        return null;
     }
 
     private boolean send(String link) {

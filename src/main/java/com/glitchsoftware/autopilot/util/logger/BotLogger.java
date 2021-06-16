@@ -21,22 +21,18 @@ public class BotLogger {
     }
 
     public void error(String message) {
-        AutoPilot.INSTANCE.getWebSocket().send(new LogPacket(0, String.format("[%s] - %s", prefix, message), timestamp()));
+        Logger.logError(String.format("[%s] - %s", prefix, message));
     }
 
     public void success(String message) {
-        AutoPilot.INSTANCE.getWebSocket().send(new LogPacket(1, String.format("[%s] - %s", prefix, message), timestamp()));
+        Logger.logSuccess(String.format("[%s] - %s", prefix, message));
     }
 
     public void info(String message) {
-        AutoPilot.INSTANCE.getWebSocket().send(new LogPacket(2, String.format("[%s] - %s", prefix, message), timestamp()));
+        Logger.logInfo(String.format("[%s] - %s", prefix, message));
     }
 
     public void warning(String message) {
-        AutoPilot.INSTANCE.getWebSocket().send(new LogPacket(3, String.format("[%s] - %s", prefix, message), timestamp()));
-    }
-
-    private String timestamp() {
-        return new SimpleDateFormat("yyyy-dd-mm HH:mm:ss").format(new Date());
+        Logger.logWarning(String.format("[%s] - %s", prefix, message));
     }
 }

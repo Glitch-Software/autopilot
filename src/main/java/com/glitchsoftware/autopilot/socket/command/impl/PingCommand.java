@@ -42,40 +42,42 @@ public class PingCommand extends Command {
                         Embeds.sendTaskStarted(pingPacket.getProduct(), pingPacket.getSku(), pingPacket.getSite(), formattedURL, task.getBots());
 
                         Logger.logSuccess("[Task Started] - " + bot.getName() + " - " + task.getSku());
-                        if(bot instanceof RestBot) {
-                            ((RestBot) bot).runBot(site, task.getSku(), task.getTaskQuantity());
-                        } else {
 
-                            String siteGroup = "footlockerus";
+                        AutoPilot.INSTANCE.getSocketConnection().send(new PublicSuccessPacket(botName,
+                                pingPacket.getSku(), pingPacket.getProduct().getName(), pingPacket.getProduct().getImage(),
+                                formattedURL));
 
-                            switch (site) {
-                                case "footlocker.com":
-                                    siteGroup = "footlockerus";
-                                    break;
-                                case "footlocker.ca":
-                                    siteGroup = "footlockerca";
-                                    break;
-                                case "kidsfootlocker.com":
-                                    siteGroup = "kidsfootlocker";
-                                    break;
-                                case "footaction.com":
-                                    siteGroup = "footaction";
-                                    break;
-                                case "champssports.com":
-                                    siteGroup = "champssports";
-                                    break;
-                                case "eastbay.com":
-                                    siteGroup = "eastbay";
-                                    break;
+                        AutoPilot.INSTANCE.getExecutorService().execute(() -> {
+                            if(bot instanceof RestBot) {
+                                ((RestBot) bot).runBot(site, task.getSku(), task.getTaskQuantity());
+                            } else {
+
+                                String siteGroup = "footlockerus";
+
+                                switch (site) {
+                                    case "footlocker.com":
+                                        siteGroup = "footlockerus";
+                                        break;
+                                    case "footlocker.ca":
+                                        siteGroup = "footlockerca";
+                                        break;
+                                    case "kidsfootlocker.com":
+                                        siteGroup = "kidsfootlocker";
+                                        break;
+                                    case "footaction.com":
+                                        siteGroup = "footaction";
+                                        break;
+                                    case "champssports.com":
+                                        siteGroup = "champssports";
+                                        break;
+                                    case "eastbay.com":
+                                        siteGroup = "eastbay";
+                                        break;
+                                }
+                                task.setRunning(true);
+                                ((BasicBot) bot).runBot(siteGroup, task);
                             }
-                            task.setRunning(true);
-
-                            if(((BasicBot) bot).runBot(siteGroup, task)) {
-                                AutoPilot.INSTANCE.getSocketConnection().send(new PublicSuccessPacket(botName,
-                                        pingPacket.getSku(), pingPacket.getProduct().getName(), pingPacket.getProduct().getImage(),
-                                        formattedURL));
-                            }
-                        }
+                        });
                     }
                 }
             }
