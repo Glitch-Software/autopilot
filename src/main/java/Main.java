@@ -1,7 +1,11 @@
 import com.glitchsoftware.autopilot.AutoPilot;
+import com.glitchsoftware.autopilot.bot.impl.rest.WrathBot;
+import com.glitchsoftware.autopilot.bot.types.BasicBot;
+import com.glitchsoftware.autopilot.bot.types.rest.RestBot;
 import com.glitchsoftware.autopilot.security.Security;
 
 import javax.swing.*;
+import java.io.File;
 
 /**
  * @author Brennan
@@ -17,6 +21,10 @@ public class Main {
         Security.start();
 
         AutoPilot.INSTANCE.start();
+
+//        final RestBot restBot = new WrathBot();
+//        restBot.setFile(new File("C:\\Users\\br3nn\\AppData\\Local\\Programs\\WrathAIO\\Wrath AIO.exe"));
+//        restBot.runBot("footlocker.com", "glitchtest", 1);
     }
 
 }

@@ -43,5 +43,6 @@ public class WebSocketCommandManger {
         commands.add(new UpdateDeleteTimeoutCommand());
         commands.add(new CloseCommand());
         commands.add(new UpdateRPCCommand());
+        commands.add(new PingCommand());
     }
 }

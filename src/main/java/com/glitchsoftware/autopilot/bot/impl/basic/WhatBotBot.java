@@ -97,8 +97,9 @@ public class WhatBotBot extends BasicBot {
                 startAllTasks.invoke();
                 //Thread.sleep(500);
 
-                Logger.logInfo("[WhatBot] - Waiting for Delete timeout");
-                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
+                final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+                getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
+                TimeUnit.MINUTES.sleep(deleteTimeout);
 
                 task.setRunning(false);
             }

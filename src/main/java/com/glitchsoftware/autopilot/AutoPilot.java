@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
 public enum AutoPilot {
     INSTANCE;
 
-    private final String VERSION = "1.0.4";
+    private final String VERSION = "1.0.5";
 
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
     private final File botsFile = new File(baseFile, "bots");
@@ -71,6 +71,9 @@ public enum AutoPilot {
 
     @Setter
     private JsonArray profitableItems;
+
+    @Setter
+    private Date lastPing;
 
     public void start() {
         if(!baseFile.exists())

@@ -149,7 +149,9 @@ public class KodaiBot extends BasicBot {
             if(automationPanel == null) {
                 return;
             }
-            getLogger().success("Waiting for Stop Timeout");
+            final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+            getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
+            TimeUnit.MINUTES.sleep(deleteTimeout);
 
             TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 

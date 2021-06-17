@@ -1,18 +1,14 @@
 package com.glitchsoftware.autopilot.bot.impl.rest;
 
+import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.annotations.RestManifest;
 import com.glitchsoftware.autopilot.bot.types.rest.RestBot;
-import mmarquee.automation.AutomationException;
 import mmarquee.automation.controls.*;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  * @author Brennan
@@ -47,23 +43,44 @@ public class WrathBot extends RestBot {
             getLogger().success("Found");
             wrathPanel.getElement().setFocus();
 
-            wrathPanel.getHyperlink(2).click();
+            Hyperlink hyperlink = getHyper(wrathPanel);
+            while (hyperlink == null) {
+                hyperlink = getHyper(wrathPanel);
+            }
+            hyperlink.click();
+
+            Thread.sleep(500);
+
+            wrathPanel = getAutomation().findPane("Wrath AIO");
+
+            Group group = wrathPanel.getGroup(0);
+            wrathPanel = getAutomation().findPane("Wrath AIO");
+
+            group.getChildren(true).get(0).invoke();
 
             getLogger().info("Sending SKU to API");
             if(send(String.format("https://www.%s/product/~/%s.html", site, sku))) {
                 getLogger().success("Sent to API");
-
-                wrathPanel = getAutomation().findPane("Wrath AIO");
-                Group group = wrathPanel.getGroup(0);
-                group.getChildren(true).get(0).invoke();
+            } else {
+                getLogger().error("Failed to send to API");
             }
 
-            new Thread(new DeleteThread(wrathPanel)).start();
+            AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(wrathPanel));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return false;
+    }
+
+    private Hyperlink getHyper(Panel panel) {
+        try {
+            return panel.getHyperlink(2);
+        } catch (Exception  e) {
+
+        }
+
+        return null;
     }
 
     private boolean send(String link) {
@@ -75,7 +92,13 @@ public class WrathBot extends RestBot {
 
             try(Response response = getOkHttpClient().newCall(request).execute()) {
                 if(response.code() == 200) {
-                    return response.body().string().contains("created successfully");
+                    final String alteredBody = response.body().string()
+                            .replace("Task", "")
+                            .replaceAll("created", "")
+                            .replaceAll("successfully", "")
+                            .replaceAll(" ", "");
+                    getLogger().info("Successfully created (" + alteredBody.split(",").length + ") tasks");
+                    return true;
                 }
             }
         } catch (Exception e) {
@@ -95,8 +118,9 @@ public class WrathBot extends RestBot {
         @Override
         public void run() {
             try {
-                getLogger().info("Waiting for Delete Timeout");
-                TimeUnit.SECONDS.sleep(5);
+                final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+                getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
+                TimeUnit.MINUTES.sleep(deleteTimeout);
 
                 getLogger().info("Stopping Tasks");
                 panel.getButton("Stop all").invoke();

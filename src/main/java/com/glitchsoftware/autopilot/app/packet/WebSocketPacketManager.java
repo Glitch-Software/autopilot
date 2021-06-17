@@ -54,6 +54,7 @@ public class WebSocketPacketManager {
         packetClasses.put("update_delete_timeout", UpdateDeleteTimeoutPacket.class);
         packetClasses.put("close", ClosePacket.class);
         packetClasses.put("update_rpc", UpdateRPCPacket.class);
+        packetClasses.put("ping", PingPacket.class);
     }
 
 }

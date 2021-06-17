@@ -6,6 +6,7 @@ import com.glitchsoftware.autopilot.socket.command.Command;
 import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.impl.AuthPacket;
 import com.glitchsoftware.autopilot.socket.packet.impl.HandshakePacket;
+import com.glitchsoftware.autopilot.util.Ping;
 import com.glitchsoftware.autopilot.util.Utils;
 import mmarquee.automation.UIAutomation;
 import mmarquee.automation.controls.Application;
@@ -38,6 +39,7 @@ public class HandshakeCommand extends Command {
         startApplication();
 
         AutoPilot.INSTANCE.getWebSocket().start();
+        Ping.checkPing();
 
         if(!AutoPilot.INSTANCE.getConfig().getAuth().getLicense().isEmpty())
             client.send(new AuthPacket(AutoPilot.INSTANCE.getConfig().getAuth().getLicense(), Utils.getHWID()));

@@ -119,7 +119,7 @@ public class PrismBot extends ConnectionBot {
                 AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(prismPanel));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().error(e.getMessage());
         }
 
         return false;
@@ -166,9 +166,9 @@ public class PrismBot extends ConnectionBot {
         @Override
         public void run() {
             try {
-                getLogger().info("Waiting for Stop Timeout");
-
-                TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
+                final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+                getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
+                TimeUnit.MINUTES.sleep(deleteTimeout);
 
                 getLogger().info("Stopping all tasks");
                 panel.getButton("Stop All").click();

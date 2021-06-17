@@ -176,7 +176,9 @@ public class KylinBot extends ConnectionBot {
         @Override
         public void run() {
             try {
-                getLogger().info("Waiting for Delete timeout");
+                final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+                getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
+                TimeUnit.MINUTES.sleep(deleteTimeout);
 
                 TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
 
