@@ -25,6 +25,7 @@ public class Main {
 //        final RestBot restBot = new WrathBot();
 //        restBot.setFile(new File("C:\\Users\\br3nn\\AppData\\Local\\Programs\\WrathAIO\\Wrath AIO.exe"));
 //        restBot.runBot("footlocker.com", "glitchtest", 1);
+
     }
 
 }
