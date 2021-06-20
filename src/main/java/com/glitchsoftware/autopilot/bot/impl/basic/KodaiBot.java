@@ -19,124 +19,119 @@ public class KodaiBot extends BasicBot {
     @Override
     public boolean runBot(String site, Task task) {
         try {
-            boolean response = false;
-            while (task.isRunning()) {
+            if(getAutomation().findPane("Kodai") == null) {
+                getLogger().info("Launching...");
 
                 if(!getFile().exists()) {
                     getLogger().error("Failed to find file!");
-                    task.setRunning(false);
-                    break;
-                }
-
-                if(getAutomation().findPane("Kodai") == null) {
-                    getLogger().info("Launching...");
-                    final Application application =
-                            new Application(
-                                    new ElementBuilder()
-                                            .automation(getAutomation())
-                                            .applicationPath(getFile().getAbsolutePath()));
-                    application.launchOrAttach();
-
-                    application.waitForInputIdle(Application.SHORT_TIMEOUT);
-
-                    System.out.println(application.getIsAttached());
-                }
-
-                getLogger().info("Waiting...");
-                Panel kodaiPanel = getAutomation().findPane("Kodai");
-                while (kodaiPanel == null) {
-                    kodaiPanel = getAutomation().findPane("Kodai");
-                }
-                getLogger().info("Found!");
-
-                kodaiPanel.getElement().setFocus();
-
-                getLogger().info("Loading...");
-                if(kodaiPanel.findButton(site) == null) {
-                    TextBox automationTextBox = null;
-                    while (automationTextBox == null) {
-                        kodaiPanel = getAutomation().findPane("Kodai");
-                        if(kodaiPanel != null)
-                            automationTextBox = kodaiPanel.findBox("RELEASES");
-                    }
-                    automationTextBox.invoke();
-                }
-                getLogger().info("Loaded");
-
-                Thread.sleep(500);
-
-                getLogger().info("Finding Site Group");
-
-                final Button button = kodaiPanel.findButton(site);
-
-                if(button == null) {
-                    getLogger().error("Failed to find site group (" + site + "). Please follow our setup guides!");
                     return false;
                 }
-                button.click();
 
-                Thread.sleep(500);
-                final EditBox automationEditBox = kodaiPanel.getEditBox(0);
-                automationEditBox.setValue(task.getSku());
-                getLogger().info("Inputting SKU");
+                final Application application =
+                        new Application(
+                                new ElementBuilder()
+                                        .automation(getAutomation())
+                                        .applicationPath(getFile().getAbsolutePath()));
+                application.launchOrAttach();
 
-                java.util.List<AutomationBase> children = kodaiPanel.getChildren(true);
+                application.waitForInputIdle(Application.SHORT_TIMEOUT);
 
-                int saveIndex = 0;
-
-                getLogger().info("Finding Button Indexes");
-                for (final AutomationBase automationBase : children) {
-                    if (automationBase instanceof Button) {
-                        if (automationBase.getName().equalsIgnoreCase("SAVE CHANGES")) {
-                            ((Button) automationBase).click();
-                            break;
-                        }
-
-                        saveIndex++;
-                    }
-                }
-                getLogger().info("Found Button indexes");
-
-                Thread.sleep(500);
-
-                getLogger().info("Creating Tasks");
-                kodaiPanel.getButton(saveIndex + 1).click();
-
-                Thread.sleep(500);
-
-                getLogger().info("Setting Profiles");
-                kodaiPanel.getCheckBox("USE ALL PROFILES.").toggle();
-
-                Thread.sleep(500);
-
-                getLogger().info("Setting Size");
-
-                final TextBox textBox = kodaiPanel.getTextBox("Size");
-                textBox.invoke();
-
-                Thread.sleep(500);
-
-                final List automationList = kodaiPanel.getList(4);
-                automationList.getChildren(true).get(3).invoke();
-
-                getLogger().info("Setting Quantity (" + task.getTaskQuantity() + ")");
-                final Spinner automationSpinner = kodaiPanel.getSpinner("1");
-                automationSpinner.setValue(String.valueOf(task.getTaskQuantity()));
-
-                kodaiPanel.getButton("CREATE TASK").click();
-                kodaiPanel.getButton("GO BACK").click();
-                getLogger().success("Created Tasks");
-
-                kodaiPanel.getButton("SAVE CHANGES").click();
-
-                getLogger().success("[Kodai] - Started Tasks");
-                kodaiPanel.getButton("START").click();
-
-                response = true;
-                AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(kodaiPanel, site, saveIndex + 4, task));
+                System.out.println(application.getIsAttached());
             }
 
-            return response;
+            getLogger().info("Waiting...");
+            Panel kodaiPanel = getAutomation().findPane("Kodai");
+            while (kodaiPanel == null) {
+                kodaiPanel = getAutomation().findPane("Kodai");
+            }
+            getLogger().info("Found!");
+
+            kodaiPanel.getElement().setFocus();
+
+            getLogger().info("Loading...");
+            if(kodaiPanel.findButton(site) == null) {
+                TextBox automationTextBox = null;
+                while (automationTextBox == null) {
+                    kodaiPanel = getAutomation().findPane("Kodai");
+                    if(kodaiPanel != null)
+                        automationTextBox = kodaiPanel.findBox("RELEASES");
+                }
+                automationTextBox.invoke();
+            }
+            getLogger().info("Loaded");
+
+            Thread.sleep(500);
+
+            getLogger().info("Finding Site Group");
+
+            final Button button = kodaiPanel.findButton(site);
+
+            if(button == null) {
+                getLogger().error("Failed to find site group (" + site + "). Please follow our setup guides!");
+                return false;
+            }
+            button.click();
+
+            Thread.sleep(500);
+            final EditBox automationEditBox = kodaiPanel.getEditBox(0);
+            automationEditBox.setValue(task.getSku());
+            getLogger().info("Inputting SKU");
+
+            java.util.List<AutomationBase> children = kodaiPanel.getChildren(true);
+
+            int saveIndex = 0;
+
+            getLogger().info("Finding Button Indexes");
+            for (final AutomationBase automationBase : children) {
+                if (automationBase instanceof Button) {
+                    if (automationBase.getName().equalsIgnoreCase("SAVE CHANGES")) {
+                        ((Button) automationBase).click();
+                        break;
+                    }
+
+                    saveIndex++;
+                }
+            }
+            getLogger().info("Found Button indexes");
+
+            Thread.sleep(500);
+
+            getLogger().info("Creating Tasks");
+            kodaiPanel.getButton(saveIndex + 1).click();
+
+            Thread.sleep(500);
+
+            getLogger().info("Setting Profiles");
+            kodaiPanel.getCheckBox("USE ALL PROFILES.").toggle();
+
+            Thread.sleep(500);
+
+            getLogger().info("Setting Size");
+
+            final TextBox textBox = kodaiPanel.getTextBox("Size");
+            textBox.invoke();
+
+            Thread.sleep(500);
+
+            final List automationList = kodaiPanel.getList(4);
+            automationList.getChildren(true).get(3).invoke();
+
+            getLogger().info("Setting Quantity (" + task.getTaskQuantity() + ")");
+            final Spinner automationSpinner = kodaiPanel.getSpinner("1");
+            automationSpinner.setValue(String.valueOf(task.getTaskQuantity()));
+
+            kodaiPanel.getButton("CREATE TASK").click();
+            kodaiPanel.getButton("GO BACK").click();
+            getLogger().success("Created Tasks");
+
+            kodaiPanel.getButton("SAVE CHANGES").click();
+
+            getLogger().success("[Kodai] - Started Tasks");
+            kodaiPanel.getButton("START").click();
+
+            AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(kodaiPanel, site, saveIndex + 4, task));
+
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,7 +183,6 @@ public class KodaiBot extends BasicBot {
 
             automationPanel.getButton(index - 4).click();
 
-            task.setRunning(false);
         } catch (Exception e) {
             e.printStackTrace();
         }

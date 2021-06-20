@@ -30,8 +30,7 @@ public class PingCommand extends Command {
 
         for(Task task : AutoPilot.INSTANCE.getTaskManager().getTasks()) {
             if(task.getSku().equalsIgnoreCase(pingPacket.getSku())
-                    && task.isActive()
-                    && !task.isRunning()) {
+                    && task.isActive()) {
                 final String site = SiteDetector.getURL(pingPacket.getSite());
                 final String formattedURL = String.format("https://%s/~/%s.html", site, pingPacket.getSku());
                 Logger.logSuccess("[SKU IN-STOCK] - " + task.getSku());
@@ -47,37 +46,7 @@ public class PingCommand extends Command {
                                 pingPacket.getSku(), pingPacket.getProduct().getName(), pingPacket.getProduct().getImage(),
                                 formattedURL));
 
-                        AutoPilot.INSTANCE.getExecutorService().execute(() -> {
-                            if(bot instanceof RestBot) {
-                                ((RestBot) bot).runBot(site, task.getSku(), task.getTaskQuantity());
-                            } else {
-
-                                String siteGroup = "footlockerus";
-
-                                switch (site) {
-                                    case "footlocker.com":
-                                        siteGroup = "footlockerus";
-                                        break;
-                                    case "footlocker.ca":
-                                        siteGroup = "footlockerca";
-                                        break;
-                                    case "kidsfootlocker.com":
-                                        siteGroup = "kidsfootlocker";
-                                        break;
-                                    case "footaction.com":
-                                        siteGroup = "footaction";
-                                        break;
-                                    case "champssports.com":
-                                        siteGroup = "champssports";
-                                        break;
-                                    case "eastbay.com":
-                                        siteGroup = "eastbay";
-                                        break;
-                                }
-                                task.setRunning(true);
-                                ((BasicBot) bot).runBot(siteGroup, task);
-                            }
-                        });
+                        AutoPilot.INSTANCE.getBotManager().executeBot(bot, site, task);
                     }
                 }
             }

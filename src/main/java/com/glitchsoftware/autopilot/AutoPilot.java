@@ -16,6 +16,7 @@ import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.SocketPacketManager;
 import com.glitchsoftware.autopilot.socket.packet.impl.HandshakePacket;
 import com.glitchsoftware.autopilot.task.TaskManager;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -40,7 +41,7 @@ import java.util.concurrent.Executors;
 public enum AutoPilot {
     INSTANCE;
 
-    private final String VERSION = "1.0.5";
+    private final String VERSION = "1.0.6";
 
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
     private final File botsFile = new File(baseFile, "bots");
@@ -95,7 +96,6 @@ public enum AutoPilot {
     }
 
     private void startSocket() {
-        //167.71.89.120
         this.socketConnection = new SocketConnection("167.71.89.120", 1337);
 
         this.socketConnection.setSocketListener(new SocketListener() {
@@ -123,12 +123,13 @@ public enum AutoPilot {
     }
 
     public void shutdownRPC() {
+        Logger.logInfo("[RPC] - Disconnected");
         DiscordRPC.discordShutdown();
     }
 
     public void setupDiscordRPC() {
-        DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
-            System.out.println("Welcome " + user.username + "#" + user.discriminator + "!");
+        final DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
+            Logger.logInfo("[RPC] - Setup with " + user.username + "#" + user.discriminator);
         }).build();
         DiscordRPC.discordInitialize("842570241464598539", handlers, true);
 

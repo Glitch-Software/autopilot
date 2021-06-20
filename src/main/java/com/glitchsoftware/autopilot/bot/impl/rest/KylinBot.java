@@ -59,6 +59,11 @@ public class KylinBot extends ConnectionBot {
             if(getAutomation().findPane("Kylin") == null) {
                 getLogger().info("Launching....");
 
+                if(!getFile().exists()) {
+                    getLogger().error("Failed to find file!");
+                    return false;
+                }
+
                 final Application application =
                         new Application(
                                 new ElementBuilder()

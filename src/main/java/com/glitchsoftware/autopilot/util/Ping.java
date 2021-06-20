@@ -2,8 +2,6 @@ package com.glitchsoftware.autopilot.util;
 
 import com.glitchsoftware.autopilot.AutoPilot;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;

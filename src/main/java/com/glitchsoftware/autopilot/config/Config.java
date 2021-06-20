@@ -37,6 +37,9 @@ public class Config {
     @SerializedName("selected_language")
     private String selectedLanguage = "en";
 
+    @SerializedName("keywords")
+    private String keywords = "";
+
     public void save() {
         try {
             final File file = new File(AutoPilot.INSTANCE.getBaseFile(), "config.json");
@@ -69,6 +72,7 @@ public class Config {
                 this.setSelectedLanguage(jsonObject.get("selected_language").getAsString());
                 this.getWebHooks().setDiscordWebhook(jsonObject.getAsJsonObject("web_hooks").get("discord_webhook").getAsString());
                 this.getAuth().setLicense(jsonObject.getAsJsonObject("auth").get("license").getAsString());
+                this.setKeywords(jsonObject.get("keywords").getAsString());
 
                 if(!this.getWebHooks().getDiscordWebhook().isEmpty()) {
                     AutoPilot.INSTANCE.setDiscordWebhook(WebhookClient.withUrl(this.getWebHooks().getDiscordWebhook()));

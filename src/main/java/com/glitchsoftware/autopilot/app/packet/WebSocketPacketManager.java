@@ -6,10 +6,7 @@ import com.glitchsoftware.autopilot.app.packet.impl.bot.DisconnectBotPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.TestBotPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.bot.UpdateBotPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.items.NeedItemsPacket;
-import com.glitchsoftware.autopilot.app.packet.impl.settings.DeactivatePacket;
-import com.glitchsoftware.autopilot.app.packet.impl.settings.TestWebhookPacket;
-import com.glitchsoftware.autopilot.app.packet.impl.settings.UpdateDeleteTimeoutPacket;
-import com.glitchsoftware.autopilot.app.packet.impl.settings.UpdateRPCPacket;
+import com.glitchsoftware.autopilot.app.packet.impl.settings.*;
 import com.glitchsoftware.autopilot.app.packet.impl.task.DeleteTaskPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.NewTaskPacket;
 import com.glitchsoftware.autopilot.app.packet.impl.task.UpdateTaskPacket;
@@ -55,6 +52,7 @@ public class WebSocketPacketManager {
         packetClasses.put("close", ClosePacket.class);
         packetClasses.put("update_rpc", UpdateRPCPacket.class);
         packetClasses.put("ping", PingPacket.class);
+        packetClasses.put("update_keywords", UpdateKeywordsPacket.class);
     }
 
 }

@@ -43,6 +43,12 @@ public class PrismBot extends ConnectionBot {
         try {
             if(getAutomation().findPane("PrismAIO") == null) {
                 getLogger().info("Launching....");
+
+                if(!getFile().exists()) {
+                    getLogger().error("Failed to find file!");
+                    return false;
+                }
+
                 final Application application =
                         new Application(
                                 new ElementBuilder()
@@ -65,8 +71,7 @@ public class PrismBot extends ConnectionBot {
             while (homeButton == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
 
-                if(prismPanel != null)
-                    homeButton = getHyper(prismPanel);
+                homeButton = getHyper(prismPanel);
             }
             getLogger().success("Loaded");
 

@@ -8,6 +8,10 @@ import mmarquee.automation.controls.*;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,6 +28,11 @@ public class WrathBot extends RestBot {
         try {
             if(getAutomation().findPane("Wrath AIO") == null) {
                 getLogger().info("Launching...");
+
+                if(!getFile().exists()) {
+                    getLogger().error("Failed to find file!");
+                    return false;
+                }
 
                 final Application application =
                         new Application(
@@ -54,6 +63,7 @@ public class WrathBot extends RestBot {
             wrathPanel = getAutomation().findPane("Wrath AIO");
 
             Group group = wrathPanel.getGroup(0);
+
             wrathPanel = getAutomation().findPane("Wrath AIO");
 
             group.getChildren(true).get(0).invoke();
@@ -85,22 +95,24 @@ public class WrathBot extends RestBot {
 
     private boolean send(String link) {
         try {
-            final Request request = new Request.Builder()
-                    .url(String.format(getApiUrl(), link))
-                    .get()
-                    .build();
+            final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(getApiUrl(), link)).openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
 
-            try(Response response = getOkHttpClient().newCall(request).execute()) {
-                if(response.code() == 200) {
-                    final String alteredBody = response.body().string()
-                            .replace("Task", "")
-                            .replaceAll("created", "")
-                            .replaceAll("successfully", "")
-                            .replaceAll(" ", "");
-                    getLogger().info("Successfully created (" + alteredBody.split(",").length + ") tasks");
-                    return true;
-                }
+            if(connection.getResponseCode() == 200) {
+                final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line = in.readLine().replace("Task", "")
+                        .replaceAll("created", "")
+                        .replaceAll("successfully", "")
+                        .replaceAll(" ", "");
+
+                getLogger().info("Successfully created (" + line.split(",").length + ") tasks");
+                connection.disconnect();
+                return true;
             }
+
+            connection.disconnect();
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,6 +133,8 @@ public class WrathBot extends RestBot {
                 final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
                 getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
                 TimeUnit.MINUTES.sleep(deleteTimeout);
+
+                panel.getElement().setFocus();
 
                 getLogger().info("Stopping Tasks");
                 panel.getButton("Stop all").invoke();

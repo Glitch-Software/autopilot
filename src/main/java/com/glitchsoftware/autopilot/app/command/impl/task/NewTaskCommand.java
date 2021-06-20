@@ -45,6 +45,14 @@ public class NewTaskCommand extends Command {
             }
 
             Logger.logInfo("[SKU MASS ADD]- " + sku);
+        } else if(sku.equalsIgnoreCase("keywords")) {
+            final Task task = new Task("keywords", bots.toArray(new String[bots.size()]), taskQuantity);
+
+            AutoPilot.INSTANCE.getTaskManager().addTask(task);
+            AutoPilot.INSTANCE.getWebSocket().send(new AddTaskPacket(task));
+
+            Logger.logInfo("[SKU ADD] - using keywords");
+
         } else {
             final Task task = new Task(sku, bots.toArray(new String[bots.size()]), taskQuantity);
             AutoPilot.INSTANCE.getTaskManager().addTask(task);

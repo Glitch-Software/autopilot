@@ -8,18 +8,28 @@ import lombok.Getter;
  **/
 @Getter
 public enum SiteDetector {
-    FOOTLOCKER_US("Footlocker US", "footlocker.com"),
-    FOOTLOCKER_CA("Footlocker CA", "footlocker.ca"),
-    KIDS_FOOTLOCKER("Kids Footlocker", "kidsfootlocker.com"),
-    FOOTACTION("Footaction", "footaction.com"),
-    CHAMPS("Champs Sports", "champssports.com"),
-    EASYBAY("Eastbay", "eastbay.com");
+    FOOTLOCKER_US("Footlocker US", "footlocker.com", "footlockerus"),
+    FOOTLOCKER_CA("Footlocker CA", "footlocker.ca", "footlockerca"),
+    KIDS_FOOTLOCKER("Kids Footlocker", "kidsfootlocker.com", "kidsfootlocker"),
+    FOOTACTION("Footaction", "footaction.com", "footaction"),
+    CHAMPS("Champs Sports", "champssports.com", "champssports"),
+    EASYBAY("Eastbay", "eastbay.com", "eastbay");
 
-    private String name, url;
+    private String name, url, group;
 
-    SiteDetector(String name, String url) {
+    SiteDetector(String name, String url, String group) {
         this.name = name;
         this.url = url;
+        this.group = group;
+    }
+
+    public static String getGroup(String site) {
+        for(SiteDetector siteDetector : values()) {
+            if(siteDetector.getUrl().equalsIgnoreCase(site))
+                return siteDetector.getGroup();
+        }
+
+        return null;
     }
 
     public static String getURL(String name) {

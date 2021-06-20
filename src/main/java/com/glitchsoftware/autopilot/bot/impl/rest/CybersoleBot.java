@@ -38,6 +38,11 @@ public class CybersoleBot extends ConnectionBot {
             if(findWindow("CyberAIO") == null) {
                 Logger.logInfo("[Cyber] - Launching...");
 
+                if(!getFile().exists()) {
+                    getLogger().error("Failed to find file!");
+                    return false;
+                }
+
                 final Application application =
                         new Application(
                                 new ElementBuilder()

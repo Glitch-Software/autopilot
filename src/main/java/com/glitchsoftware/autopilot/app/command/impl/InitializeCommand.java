@@ -22,6 +22,7 @@ public class InitializeCommand extends Command {
             AutoPilot.INSTANCE.getWebSocket().send(new InitializedPacket(AutoPilot.INSTANCE.getCurrentUser(),
                     AutoPilot.INSTANCE.getVERSION(),
                     AutoPilot.INSTANCE.getConfig().getWebHooks().getDiscordWebhook(),
+                    AutoPilot.INSTANCE.getConfig().getKeywords(),
                     AutoPilot.INSTANCE.getConfig().isDiscordRPC(),
                     AutoPilot.INSTANCE.getConfig().getDeleteTimeout(),
                     AutoPilot.INSTANCE.getBotManager().getBotsAsJSON(),

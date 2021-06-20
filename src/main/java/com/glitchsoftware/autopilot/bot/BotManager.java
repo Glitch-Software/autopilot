@@ -7,7 +7,11 @@ import com.glitchsoftware.autopilot.bot.impl.rest.CybersoleBot;
 import com.glitchsoftware.autopilot.bot.impl.rest.KylinBot;
 import com.glitchsoftware.autopilot.bot.impl.rest.PrismBot;
 import com.glitchsoftware.autopilot.bot.impl.rest.WrathBot;
+import com.glitchsoftware.autopilot.bot.types.BasicBot;
+import com.glitchsoftware.autopilot.bot.types.rest.RestBot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
+import com.glitchsoftware.autopilot.task.Task;
+import com.glitchsoftware.autopilot.util.SiteDetector;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -119,5 +123,15 @@ public class BotManager {
         }
 
         return null;
+    }
+
+    public void executeBot(Bot bot, String site, Task task) {
+        AutoPilot.INSTANCE.getExecutorService().execute(() -> {
+            if(bot instanceof RestBot) {
+                ((RestBot) bot).runBot(site, task.getSku(), task.getTaskQuantity());
+            } else {
+                ((BasicBot) bot).runBot(SiteDetector.getGroup(site), task);
+            }
+        });
     }
 }
