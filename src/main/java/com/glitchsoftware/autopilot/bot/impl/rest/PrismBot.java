@@ -63,14 +63,15 @@ public class PrismBot extends ConnectionBot {
             Panel prismPanel = getAutomation().findPane("PrismAIO");
             while (prismPanel == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
+                Thread.sleep(500);
             }
+
             getLogger().success("Found");
 
             getLogger().info("Loading...");
-            Hyperlink homeButton = getHyper(prismPanel);
+            Hyperlink homeButton = null;
             while (homeButton == null) {
                 prismPanel = getAutomation().findPane("PrismAIO");
-
                 homeButton = getHyper(prismPanel);
             }
             getLogger().success("Loaded");
