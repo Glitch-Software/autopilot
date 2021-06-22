@@ -14,9 +14,8 @@ https://github.com/Glitch-Software/autopilot.git
 ```
 
 **Eclipse**
-```Right click -> New -> Java Project -> Browse location -> Select Memenight folder -> Finish```
+```Right click -> New -> Java Project -> Browse location -> Select folder -> Finish```
 
 **Intelij**
-```Open -> Select Memenight folder -> Import gradle project```
-
+```Open -> Select folder -> Import gradle project```
 
