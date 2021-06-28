@@ -3,3 +3,4 @@
 build
 gradle
 workspace
+.DS_STORE
