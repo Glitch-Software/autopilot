@@ -1,12 +1,15 @@
 package com.glitchsoftware.autopilot.bot;
 
+import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.util.logger.BotLogger;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import mmarquee.automation.UIAutomation;
+import org.sikuli.script.Screen;
 
 import java.io.File;
+import java.net.URL;
 
 /**
  * @author Brennan
@@ -25,7 +28,14 @@ public abstract class AbstractBot implements Bot {
      */
     private final UIAutomation automation = UIAutomation.getInstance();
 
+    /**
+     * All our bots utilizes the OCR library
+     */
+    private final Screen screen = new Screen();
+
     private BotLogger logger;
+
+    private String basePath;
 
     /**
      * Our base constructor that gets our {@link BotManifest} to get our name
@@ -33,6 +43,12 @@ public abstract class AbstractBot implements Bot {
     public AbstractBot() {
         if(getClass().isAnnotationPresent(BotManifest.class)) {
             this.name = getClass().getAnnotation(BotManifest.class).value();
+
+            try {
+                this.basePath = AutoPilot.INSTANCE.getImagesFile().getAbsolutePath() + File.separator + name.toLowerCase() + File.separator;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             this.logger = new BotLogger(name);
         }

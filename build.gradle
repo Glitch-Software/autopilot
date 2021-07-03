@@ -36,9 +36,10 @@ dependencies {
     shaded 'com.teamdev.jxbrowser:jxbrowser-cross-platform:7.14'
     shaded 'com.teamdev.jxbrowser:jxbrowser-swing:7.14'
     shaded 'com.diogonunes:JColor:+'
-    shaded 'com.github.Glitch-Software:ui-automation:0.6.2'
+    shaded 'com.github.Glitch-Software:ui-automation:0.6.3.1'
     shaded 'com.github.webbit:webbit:v0.4.19'
     shaded 'com.github.Vatuu:discord-rpc:1.6.2'
+    shaded 'com.sikulix:sikulixapi:2.0.5'
 
     implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 

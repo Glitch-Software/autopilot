@@ -1,6 +1,7 @@
 package com.glitchsoftware.autopilot.bot;
 
 import com.google.gson.JsonObject;
+import org.sikuli.script.App;
 
 import java.io.File;
 
@@ -41,5 +42,27 @@ public interface Bot {
      * @param jsonObject saved JSON
      */
     void fromJSON(JsonObject jsonObject);
+
+    default App launchBot() {
+        App botApp = findApp(getName());
+
+        if(botApp == null) {
+            botApp = App.open(getFile().getAbsolutePath());
+            botApp.waitForWindow();
+        }
+        botApp.focus();
+
+        return botApp;
+    }
+
+    default App findApp(String name) {
+        for(App app : App.getApps()) {
+            if(app.getName().contains(name)) {
+                return app;
+            }
+        }
+
+        return null;
+    }
 
 }

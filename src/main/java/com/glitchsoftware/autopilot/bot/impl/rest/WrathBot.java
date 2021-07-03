@@ -4,13 +4,19 @@ import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.annotations.RestManifest;
 import com.glitchsoftware.autopilot.bot.types.rest.RestBot;
+import com.glitchsoftware.autopilot.util.logger.Logger;
+import com.teamdev.jxbrowser.deps.org.checkerframework.checker.units.qual.A;
 import mmarquee.automation.controls.*;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.sikuli.script.App;
+import org.sikuli.script.ImagePath;
+import org.sikuli.script.Match;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.NoRouteToHostException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -24,73 +30,35 @@ public class WrathBot extends RestBot {
 
     @Override
     public boolean runBot(String site, String sku, int taskQuantity) {
-
         try {
-            if(getAutomation().findPane("Wrath AIO") == null) {
-                getLogger().info("Launching...");
+            final App wrathApp = launchBot();
 
-                if(!getFile().exists()) {
-                    getLogger().error("Failed to find file!");
-                    return false;
-                }
+            getLogger().info("Waiting....");
 
-                final Application application =
-                        new Application(
-                                new ElementBuilder()
-                                        .automation(getAutomation())
-                                        .applicationPath(getFile().getAbsolutePath()));
-                application.launchOrAttach();
-
-                application.waitForInputIdle(Application.SHORT_TIMEOUT);
-            }
-            getLogger().info("Waiting...");
-
-            Panel wrathPanel = getAutomation().findPane("Wrath AIO");
-            while (wrathPanel == null) {
-                wrathPanel = getAutomation().findPane("Wrath AIO");
+            final Match match = getScreen().exists(getBasePath() + "tasks.png");
+            if(match == null) {
+                getScreen().wait(getBasePath() + "taskbutton.png");
+                getScreen().click(getBasePath() + "taskbutton.png");
             }
             getLogger().success("Found");
-            wrathPanel.getElement().setFocus();
-
-            Hyperlink hyperlink = getHyper(wrathPanel);
-            while (hyperlink == null) {
-                hyperlink = getHyper(wrathPanel);
-            }
-            hyperlink.click();
-
-            Thread.sleep(500);
-
-            wrathPanel = getAutomation().findPane("Wrath AIO");
-
-            Group group = wrathPanel.getGroup(0);
-
-            wrathPanel = getAutomation().findPane("Wrath AIO");
-
-            group.getChildren(true).get(0).invoke();
 
             getLogger().info("Sending SKU to API");
             if(send(String.format("https://www.%s/product/~/%s.html", site, sku))) {
                 getLogger().success("Sent to API");
+
+                getLogger().info("Searching for QT group.");
+                getScreen().wait(getBasePath() + "group.png");
+                getScreen().click(getBasePath() + "group.png");
+
+                AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(wrathApp));
             } else {
                 getLogger().error("Failed to send to API");
             }
-
-            AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(wrathPanel));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return false;
-    }
-
-    private Hyperlink getHyper(Panel panel) {
-        try {
-            return panel.getHyperlink(2);
-        } catch (Exception  e) {
-
-        }
-
-        return null;
     }
 
     private boolean send(String link) {
@@ -114,38 +82,37 @@ public class WrathBot extends RestBot {
             connection.disconnect();
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().error("Error trying to send to API: " + e.getMessage());
         }
 
         return false;
     }
 
     private class DeleteThread implements Runnable {
-        private final Panel panel;
+        private final App panel;
 
-        public DeleteThread(Panel panel) {
+        public DeleteThread(App panel) {
             this.panel = panel;
         }
 
         @Override
         public void run() {
             try {
-                final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+                final long deleteTimeout = 5;
                 getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
-                TimeUnit.MINUTES.sleep(deleteTimeout);
+                TimeUnit.SECONDS.sleep(deleteTimeout);
 
-                panel.getElement().setFocus();
-
-                getLogger().info("Stopping Tasks");
-                panel.getButton("Stop all").invoke();
+                panel.focus();
 
                 getLogger().info("Deleting Tasks");
-                panel.getButton("Delete all").invoke();
+                getScreen().wait(getBasePath() + "deleteall.png");
+                getScreen().click(getBasePath() + "deleteall.png");
+                getScreen().wait(getBasePath() + "delete.png");
 
-                Thread.sleep(500);
+                getScreen().click(getBasePath() + "delete.png");
 
                 getLogger().success("Deleted Tasks");
-                panel.getButton("Delete").invoke();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

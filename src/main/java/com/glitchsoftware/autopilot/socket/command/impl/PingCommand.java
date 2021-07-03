@@ -29,8 +29,7 @@ public class PingCommand extends Command {
         final PingPacket pingPacket = (PingPacket) packet;
 
         for(Task task : AutoPilot.INSTANCE.getTaskManager().getTasks()) {
-            if(task.getSku().equalsIgnoreCase(pingPacket.getSku())
-                    && task.isActive()) {
+            if(task.getSku().equalsIgnoreCase(pingPacket.getSku())) {
                 final String site = SiteDetector.getURL(pingPacket.getSite());
                 final String formattedURL = String.format("https://%s/~/%s.html", site, pingPacket.getSku());
                 Logger.logSuccess("[SKU IN-STOCK] - " + task.getSku());

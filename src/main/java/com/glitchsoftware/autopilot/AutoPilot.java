@@ -16,6 +16,7 @@ import com.glitchsoftware.autopilot.socket.packet.Packet;
 import com.glitchsoftware.autopilot.socket.packet.SocketPacketManager;
 import com.glitchsoftware.autopilot.socket.packet.impl.HandshakePacket;
 import com.glitchsoftware.autopilot.task.TaskManager;
+import com.glitchsoftware.autopilot.util.ClasspathUtils;
 import com.glitchsoftware.autopilot.util.logger.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,12 +26,23 @@ import lombok.Setter;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
+import org.sikuli.script.ImagePath;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.*;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 
 /**
@@ -45,6 +57,7 @@ public enum AutoPilot {
 
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
     private final File botsFile = new File(baseFile, "bots");
+    private final File imagesFile = new File(baseFile, "images");
 
     private final WebSocket webSocket = new WebSocket();
     private SocketConnection socketConnection;
@@ -81,6 +94,9 @@ public enum AutoPilot {
             baseFile.mkdirs();
         if(!botsFile.exists())
             botsFile.mkdirs();
+        setupImages();
+
+        ImagePath.add(getClass().getResource("/resources/images/"));
 
         config.load();
         setupDiscordRPC();
@@ -89,6 +105,19 @@ public enum AutoPilot {
         startSocket();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> getWebSocket().send(new ClosingPacket())));
+    }
+
+    private void setupImages() {
+        if(imagesFile.exists()) {
+            imagesFile.delete();
+        }
+        //imagesFile.mkdirs();
+
+        try {
+            ClasspathUtils.extractResources("/images/", baseFile.toPath(), AutoPilot.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void save() {

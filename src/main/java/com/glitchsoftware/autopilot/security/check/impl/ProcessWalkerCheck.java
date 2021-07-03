@@ -45,8 +45,6 @@ public class ProcessWalkerCheck extends Check {
         put(new Level(1), "joeboxcontrol.exe");
         put(new Level(1), "joeboxserver.exe");
         put(new Level(0), "fiddler.exe");
-        put(new Level(1), "tv_w32.exe");
-        put(new Level(1), "tv_x64.exe");
         put(new Level(0), "Charles.exe");
         put(new Level(0), "HTTPDebuggerUI.exe");
         put(new Level(0), "Fiddler Everywhere.exe");
