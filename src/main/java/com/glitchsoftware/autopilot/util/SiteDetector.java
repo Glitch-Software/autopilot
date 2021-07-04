@@ -23,6 +23,15 @@ public enum SiteDetector {
         this.group = group;
     }
 
+    public static String getName(String url) {
+        for(SiteDetector siteDetector : values()) {
+            if(siteDetector.getUrl().equalsIgnoreCase(url))
+                return siteDetector.getName();
+        }
+
+        return null;
+    }
+
     public static String getGroup(String site) {
         for(SiteDetector siteDetector : values()) {
             if(siteDetector.getUrl().equalsIgnoreCase(site))

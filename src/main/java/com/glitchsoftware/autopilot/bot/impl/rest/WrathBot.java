@@ -4,19 +4,12 @@ import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.annotations.RestManifest;
 import com.glitchsoftware.autopilot.bot.types.rest.RestBot;
-import com.glitchsoftware.autopilot.util.logger.Logger;
-import com.teamdev.jxbrowser.deps.org.checkerframework.checker.units.qual.A;
-import mmarquee.automation.controls.*;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.sikuli.script.App;
-import org.sikuli.script.ImagePath;
 import org.sikuli.script.Match;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.NoRouteToHostException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 

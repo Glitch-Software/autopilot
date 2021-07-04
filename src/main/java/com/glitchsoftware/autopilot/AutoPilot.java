@@ -96,8 +96,6 @@ public enum AutoPilot {
             botsFile.mkdirs();
         setupImages();
 
-        ImagePath.add(getClass().getResource("/resources/images/"));
-
         config.load();
         setupDiscordRPC();
         this.botManager = new BotManager();
@@ -111,7 +109,6 @@ public enum AutoPilot {
         if(imagesFile.exists()) {
             imagesFile.delete();
         }
-        //imagesFile.mkdirs();
 
         try {
             ClasspathUtils.extractResources("/images/", baseFile.toPath(), AutoPilot.class);

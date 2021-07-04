@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.sikuli.script.App;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * @author Brennan
@@ -57,7 +58,7 @@ public interface Bot {
 
     default App findApp(String name) {
         for(App app : App.getApps()) {
-            if(app.getName().contains(name)) {
+            if(app.getName().toLowerCase().contains(name.toLowerCase())) {
                 return app;
             }
         }
