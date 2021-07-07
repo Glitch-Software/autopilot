@@ -4,8 +4,14 @@ import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
 import com.glitchsoftware.autopilot.task.Task;
+import com.glitchsoftware.autopilot.util.SiteDetector;
+import com.glitchsoftware.autopilot.util.Utils;
 import com.glitchsoftware.autopilot.util.logger.BotLogger;
+import com.glitchsoftware.autopilot.util.logger.Logger;
 import mmarquee.automation.controls.*;
+import org.opencv.core.Mat;
+import org.sikuli.script.App;
+import org.sikuli.script.Match;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,120 +24,135 @@ public class KodaiBot extends BasicBot {
 
     @Override
     public boolean runBot(String site, Task task) {
-        try {
-            if(getAutomation().findPane("Kodai") == null) {
-                getLogger().info("Launching...");
 
-                if(!getFile().exists()) {
-                    getLogger().error("Failed to find file!");
+        try {
+            final App kodaiApp = launchBot();
+
+            getLogger().info("Waiting....");
+
+            final Match kodaiIcon = getScreen().exists(getBasePath() + "kodai_icon.png");
+            if(kodaiIcon != null) {
+                final Match releasesButton = getScreen().exists(getBasePath() + "releases_button.png");
+                if(releasesButton != null) {
+                    getLogger().success("Found 'Releases' finding task group...");
+                    releasesButton.click();
+                } else {
+                    getLogger().error("Failed to find 'Releases'");
+                    return false;
+                }
+            } else {
+                final Match taskGroupButton = getScreen().exists(getBasePath() + "task_group_button.png");
+
+                if(taskGroupButton == null) {
+                    getLogger().error("Not on 'Dashboard' or 'Releases' Page");
+
                     return false;
                 }
 
-                final Application application =
-                        new Application(
-                                new ElementBuilder()
-                                        .automation(getAutomation())
-                                        .applicationPath(getFile().getAbsolutePath()));
-                application.launchOrAttach();
-
-                application.waitForInputIdle(Application.SHORT_TIMEOUT);
-
-                System.out.println(application.getIsAttached());
+                getLogger().success("Already on 'Releases' Page");
             }
 
-            getLogger().info("Waiting...");
-            Panel kodaiPanel = getAutomation().findPane("Kodai");
-            while (kodaiPanel == null) {
-                kodaiPanel = getAutomation().findPane("Kodai");
-            }
-            getLogger().info("Found!");
+            final String group = getBasePath() + SiteDetector.getGroup(site) + "_button.png";
 
-            kodaiPanel.getElement().setFocus();
+            final Match groupButton = getScreen().exists(group);
 
-            getLogger().info("Loading...");
-            if(kodaiPanel.findButton(site) == null) {
-                TextBox automationTextBox = null;
-                while (automationTextBox == null) {
-                    kodaiPanel = getAutomation().findPane("Kodai");
-                    if(kodaiPanel != null)
-                        automationTextBox = kodaiPanel.findBox("RELEASES");
-                }
-                automationTextBox.invoke();
-            }
-            getLogger().info("Loaded");
-
-            Thread.sleep(500);
-
-            getLogger().info("Finding Site Group");
-
-            final Button button = kodaiPanel.findButton(site);
-
-            if(button == null) {
-                getLogger().error("Failed to find site group (" + site + "). Please follow our setup guides!");
+            if(groupButton != null) {
+                getLogger().success("Found '" + site + "' task group.");
+                groupButton.click();
+            } else {
+                getLogger().error("Failed to find '" + site + "' task group!");
                 return false;
             }
-            button.click();
 
-            Thread.sleep(500);
-            final EditBox automationEditBox = kodaiPanel.getEditBox(0);
-            automationEditBox.setValue(task.getSku());
-            getLogger().info("Inputting SKU");
+            final Match skuInput = getScreen().exists(getBasePath() + "sku_input.png");
+            if(skuInput != null) {
+                getLogger().success("Found SKU input...");
+                skuInput.click();
+                Utils.deleteAll();
+                skuInput.type(task.getSku());
 
-            java.util.List<AutomationBase> children = kodaiPanel.getChildren(true);
+                final Match saveChanges = getScreen().exists(getBasePath() + "save_changes_button.png");
+                if(saveChanges != null) {
+                    getLogger().success("Saved Changes");
+                    saveChanges.click();
 
-            int saveIndex = 0;
+                    final Match newTaskButton = getScreen().exists(getBasePath() + "new_task.png");
+                    if(newTaskButton != null) {
+                        getLogger().success("Creating Tasks...");
+                        newTaskButton.click();
 
-            getLogger().info("Finding Button Indexes");
-            for (final AutomationBase automationBase : children) {
-                if (automationBase instanceof Button) {
-                    if (automationBase.getName().equalsIgnoreCase("SAVE CHANGES")) {
-                        ((Button) automationBase).click();
-                        break;
+                        final Match useAllProfiles = getScreen().exists(getBasePath() + "use_all_profiles.png");
+                        if(useAllProfiles != null) {
+                            getLogger().success("Set Profiles");
+                            useAllProfiles.click();
+
+                            final Match taskQuantity = getScreen().exists(getBasePath() + "task_quantity.png");
+                            if(taskQuantity != null) {
+                                getLogger().success("Setting Task Quantity");
+                                taskQuantity.click();
+                                Utils.deleteAll();
+                                taskQuantity.type(String.valueOf(task.getTaskQuantity()));
+
+                                final Match sizes = getScreen().exists(getBasePath() + "size_button.png");
+                                if(sizes != null) {
+                                    getLogger().success("Setting Sizes");
+                                    sizes.click();
+
+                                    getScreen().wait(getBasePath() + "sizes.png");
+
+                                    final Match randomSize = getScreen().exists(getBasePath() + "random_button.png");
+                                    if(randomSize != null) {
+                                        getLogger().success("Set size to 'Random'");
+                                        randomSize.click();
+
+                                        final Match createTask = getScreen().exists(getBasePath() + "create_task.png");
+
+                                        if(createTask != null) {
+                                            getLogger().success("Created Task");
+                                            createTask.click();
+
+                                            final Match goBackButton = getScreen().exists(getBasePath() + "go_back.png");
+                                            if(goBackButton != null) {
+                                                goBackButton.click();
+
+                                                saveChanges.click();
+
+                                                final Match startButton = getScreen().exists(getBasePath() + "start_button.png");
+                                                if(startButton != null) {
+                                                    getLogger().success("Starting Tasks.");
+                                                    startButton.click();
+
+                                                    new Thread(new DeleteThread(kodaiApp)).start();
+                                                } else {
+                                                    getLogger().error("Failed to find 'Start'");
+                                                }
+                                            } else {
+                                                getLogger().error("Failed to find 'Go Back'");
+                                            }
+                                        } else {
+                                            getLogger().error("Failed to find 'Create Task'");
+                                        }
+                                    } else {
+                                        getLogger().error("Failed to find 'Random'");
+                                    }
+                                } else {
+                                    getLogger().error("Failed to find 'Sizes'");
+                                }
+                            } else {
+                                getLogger().error("Failed to find 'Task Quantity'");
+                            }
+                        } else {
+                            getLogger().error("Failed to find 'Use ALl Profiles'");
+                        }
+                    } else {
+                        getLogger().error("Failed to find 'New Task'");
                     }
-
-                    saveIndex++;
+                } else {
+                    getLogger().error("Failed to find 'Save Changes'");
                 }
+            } else {
+                getLogger().error("Failed to find 'SKU input'");
             }
-            getLogger().info("Found Button indexes");
-
-            Thread.sleep(500);
-
-            getLogger().info("Creating Tasks");
-            kodaiPanel.getButton(saveIndex + 1).click();
-
-            Thread.sleep(500);
-
-            getLogger().info("Setting Profiles");
-            kodaiPanel.getCheckBox("USE ALL PROFILES.").toggle();
-
-            Thread.sleep(500);
-
-            getLogger().info("Setting Size");
-
-            final TextBox textBox = kodaiPanel.getTextBox("Size");
-            textBox.invoke();
-
-            Thread.sleep(500);
-
-            final List automationList = kodaiPanel.getList(4);
-            automationList.getChildren(true).get(3).invoke();
-
-            getLogger().info("Setting Quantity (" + task.getTaskQuantity() + ")");
-            final Spinner automationSpinner = kodaiPanel.getSpinner("1");
-            automationSpinner.setValue(String.valueOf(task.getTaskQuantity()));
-
-            kodaiPanel.getButton("CREATE TASK").click();
-            kodaiPanel.getButton("GO BACK").click();
-            getLogger().success("Created Tasks");
-
-            kodaiPanel.getButton("SAVE CHANGES").click();
-
-            getLogger().success("[Kodai] - Started Tasks");
-            kodaiPanel.getButton("START").click();
-
-            AutoPilot.INSTANCE.getExecutorService().execute(new DeleteThread(kodaiPanel, site, saveIndex + 4, task));
-
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,72 +160,48 @@ public class KodaiBot extends BasicBot {
         return false;
     }
 
-    private void deleteTasks(Panel automationPanel, String group, int index, Task task) {
-        try {
-            if(automationPanel == null) {
-                return;
-            }
-            final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
-            getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
-            TimeUnit.MINUTES.sleep(deleteTimeout);
-
-            TimeUnit.MINUTES.sleep(AutoPilot.INSTANCE.getConfig().getDeleteTimeout());
-
-            final Button button = automationPanel.findButton(group);
-
-            if(button == null) {
-                getLogger().error("Failed to find (" + group + ") button!");
-                return;
-            }
-            button.click();
-
-            getLogger().success("Stopping Tasks");
-
-            final Button stopButton = automationPanel.findButton("STOP");
-            if(stopButton != null) {
-                stopButton.click();
-                getLogger().success("Stopped Tasks");
-            }
-
-            Thread.sleep(500);
-
-            automationPanel.getButton(index).click();
-
-            Thread.sleep(500);
-
-            getLogger().success("Deleting Tasks");
-
-            automationPanel.getButton("YES, DELETE THEM ALL.").click();
-
-            getLogger().success("Resetting SKU");
-
-            final EditBox automationEditBox = automationPanel.getEditBox(0);
-            automationEditBox.setValue("");
-
-            automationPanel.getButton(index - 4).click();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private class DeleteThread implements Runnable {
-        private final Panel automationPanel;
-        private final String group;
-        private final int index;
+        private final App app;
 
-        private Task task;
-
-        public DeleteThread(Panel automationPanel, String group, int index, Task task) {
-            this.automationPanel = automationPanel;
-            this.group = group;
-            this.index = index;
-            this.task = task;
+        public DeleteThread(App app) {
+            this.app = app;
         }
 
         @Override
         public void run() {
-            deleteTasks(automationPanel, group, index, task);
+            try {
+                Logger.logInfo("Waiting for Delete Timeout.");
+
+                TimeUnit.SECONDS.sleep(5);
+
+                final Match stopButton = getScreen().exists(getBasePath() + "stop_button.png");
+
+                if(stopButton != null) {
+                    stopButton.click();
+
+                    final Match clearButton = getScreen().wait(getBasePath() + "clear_button.png");
+                    if(clearButton != null) {
+                        clearButton.click();
+
+                        getScreen().wait(getBasePath() + "delete_dialog.png");
+
+                        final Match confirmDelete = getScreen().exists(getBasePath() + "confirm_delete.png");
+                        if(confirmDelete != null) {
+                            getLogger().success("Deleted all tasks");
+                            confirmDelete.click();
+                        } else {
+                            getLogger().error("Failed to find 'Confirm Delete'");
+                        }
+                    } else {
+                        getLogger().error("Failed to find 'Clear'");
+                    }
+
+                } else {
+                    getLogger().error("Failed to find 'Stop'");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

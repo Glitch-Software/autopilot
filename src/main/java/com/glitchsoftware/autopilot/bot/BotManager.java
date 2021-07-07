@@ -130,7 +130,7 @@ public class BotManager {
             if(bot instanceof RestBot) {
                 ((RestBot) bot).runBot(site, task.getSku(), task.getTaskQuantity());
             } else {
-                ((BasicBot) bot).runBot(SiteDetector.getGroup(site), task);
+                ((BasicBot) bot).runBot(site, task);
             }
         });
     }
