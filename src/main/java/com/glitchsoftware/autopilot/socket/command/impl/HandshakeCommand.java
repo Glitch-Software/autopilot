@@ -8,11 +8,8 @@ import com.glitchsoftware.autopilot.socket.packet.impl.AuthPacket;
 import com.glitchsoftware.autopilot.socket.packet.impl.HandshakePacket;
 import com.glitchsoftware.autopilot.util.Ping;
 import com.glitchsoftware.autopilot.util.Utils;
-import mmarquee.automation.UIAutomation;
-import mmarquee.automation.controls.Application;
-import mmarquee.automation.controls.ElementBuilder;
+import org.sikuli.script.App;
 
-import javax.swing.*;
 import java.io.File;
 
 
@@ -47,27 +44,28 @@ public class HandshakeCommand extends Command {
 
     private void startApplication() {
         try {
-            UIAutomation automation = UIAutomation.getInstance();
+            final String userDir = System.getProperty("user.dir") + File.separator + "app" + File.separator;
+            final File uiFile = new File(userDir, "Glitch.exe");
 
-            if(automation.findPane("glitch-autopilot") == null) {
-                System.out.println("Application not found starting");
-                final String userDir = System.getProperty("user.dir") + File.separator + "app" + File.separator;
-
-                final File uiFile = new File(userDir, "Glitch.exe");
-
-                final Application application =
-                        new Application(
-                                new ElementBuilder()
-                                        .automation(automation)
-                                        .applicationPath(uiFile.getAbsolutePath()));
-                application.launchOrAttach();
-
-                application.waitForInputIdle(Application.SHORT_TIMEOUT);
+            App botApp = findApp("glitch-autopilot");
+            if(botApp == null) {
+                botApp = App.open(uiFile.getAbsolutePath());
+                botApp.waitForWindow();
             }
-
-            automation = null;
+            botApp.focus();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private App findApp(String name) {
+        for(App app : App.getApps()) {
+            if(app.getName().toLowerCase().contains(name.toLowerCase())) {
+                return app;
+            }
+        }
+
+        return null;
+    }
+
 }

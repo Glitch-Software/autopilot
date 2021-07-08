@@ -6,15 +6,9 @@ import com.glitchsoftware.autopilot.bot.types.BasicBot;
 import com.glitchsoftware.autopilot.task.Task;
 import com.glitchsoftware.autopilot.util.SiteDetector;
 import com.glitchsoftware.autopilot.util.Utils;
-import com.glitchsoftware.autopilot.util.logger.Logger;
-import mmarquee.automation.controls.*;
-import org.checkerframework.checker.units.qual.K;
 import org.sikuli.script.App;
-import org.sikuli.script.Key;
 import org.sikuli.script.Match;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -122,8 +116,9 @@ public class WhatBotBot extends BasicBot {
         @Override
         public void run() {
             try {
-                getLogger().info("Waiting for delete timeout");
-                TimeUnit.SECONDS.sleep(6);
+                final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+                getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
+                TimeUnit.MINUTES.sleep(deleteTimeout);
 
                 app.focus();
 

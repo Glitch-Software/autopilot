@@ -6,10 +6,7 @@ import com.glitchsoftware.autopilot.bot.types.BasicBot;
 import com.glitchsoftware.autopilot.task.Task;
 import com.glitchsoftware.autopilot.util.SiteDetector;
 import com.glitchsoftware.autopilot.util.Utils;
-import com.glitchsoftware.autopilot.util.logger.BotLogger;
 import com.glitchsoftware.autopilot.util.logger.Logger;
-import mmarquee.automation.controls.*;
-import org.opencv.core.Mat;
 import org.sikuli.script.App;
 import org.sikuli.script.Match;
 
@@ -170,9 +167,9 @@ public class KodaiBot extends BasicBot {
         @Override
         public void run() {
             try {
-                Logger.logInfo("Waiting for Delete Timeout.");
-
-                TimeUnit.SECONDS.sleep(5);
+                final long deleteTimeout = AutoPilot.INSTANCE.getConfig().getDeleteTimeout();
+                getLogger().info("Waiting for Delete Timeout (" + deleteTimeout + " minutes)");
+                TimeUnit.MINUTES.sleep(deleteTimeout);
 
                 final Match stopButton = getScreen().exists(getBasePath() + "stop_button.png");
 

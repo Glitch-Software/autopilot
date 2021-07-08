@@ -35,9 +35,9 @@ public class BotManager {
     public BotManager() {
         this.bots.add(new KodaiBot());
         this.bots.add(new WhatBotBot());
-        this.bots.add(new CybersoleBot());
+    //    this.bots.add(new CybersoleBot());
         this.bots.add(new KylinBot());
-        this.bots.add(new PrismBot());
+    //    this.bots.add(new PrismBot());
         this.bots.add(new WrathBot());
 
         loadBots();

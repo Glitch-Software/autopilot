@@ -1,3 +1,5 @@
+package com.glitchsoftware.autopilot;
+
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.security.Security;
 
@@ -9,7 +11,7 @@ import javax.swing.*;
  **/
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         if(!System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
             JOptionPane.showMessageDialog(null, "Glitch only supports Windows!");
             return;

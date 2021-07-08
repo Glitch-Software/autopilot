@@ -53,11 +53,11 @@ import java.util.regex.Pattern;
 public enum AutoPilot {
     INSTANCE;
 
-    private final String VERSION = "1.0.6";
+    private final String VERSION = "1.0.7";
 
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
     private final File botsFile = new File(baseFile, "bots");
-    private final File imagesFile = new File(baseFile, "images");
+    private File imagesFile;
 
     private final WebSocket webSocket = new WebSocket();
     private SocketConnection socketConnection;
@@ -94,7 +94,8 @@ public enum AutoPilot {
             baseFile.mkdirs();
         if(!botsFile.exists())
             botsFile.mkdirs();
-        setupImages();
+
+        imagesFile = new File(System.getProperty("user.dir"), "images");
 
         config.load();
         setupDiscordRPC();
@@ -103,18 +104,6 @@ public enum AutoPilot {
         startSocket();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> getWebSocket().send(new ClosingPacket())));
-    }
-
-    private void setupImages() {
-        if(imagesFile.exists()) {
-            imagesFile.delete();
-        }
-
-        try {
-            ClasspathUtils.extractResources("/images/", baseFile.toPath(), AutoPilot.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void save() {

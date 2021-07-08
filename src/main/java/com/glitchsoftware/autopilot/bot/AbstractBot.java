@@ -5,7 +5,6 @@ import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.util.logger.BotLogger;
 import com.google.gson.JsonObject;
 import lombok.Getter;
-import mmarquee.automation.UIAutomation;
 import org.sikuli.script.Screen;
 
 import java.io.File;
@@ -22,11 +21,6 @@ public abstract class AbstractBot implements Bot {
     private String name;
 
     private File file;
-
-    /**
-     * All our bots utilizes the automation library
-     */
-    private final UIAutomation automation = UIAutomation.getInstance();
 
     /**
      * All our bots utilizes the OCR library

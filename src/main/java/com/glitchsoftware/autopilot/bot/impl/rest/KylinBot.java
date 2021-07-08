@@ -4,20 +4,15 @@ import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.annotations.BotManifest;
 import com.glitchsoftware.autopilot.bot.annotations.RestManifest;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
-import com.glitchsoftware.autopilot.util.logger.Logger;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;
-import mmarquee.automation.controls.Application;
-import mmarquee.automation.controls.ElementBuilder;
-import mmarquee.automation.controls.Panel;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import javax.swing.*;
+import org.sikuli.script.App;
 
 import java.net.URLEncoder;
 import java.util.concurrent.TimeUnit;
@@ -56,29 +51,8 @@ public class KylinBot extends ConnectionBot {
         }
 
         try {
-            if(getAutomation().findPane("Kylin") == null) {
-                getLogger().info("Launching....");
-
-                if(!getFile().exists()) {
-                    getLogger().error("Failed to find file!");
-                    return false;
-                }
-
-                final Application application =
-                        new Application(
-                                new ElementBuilder()
-                                        .automation(getAutomation())
-                                        .applicationPath(getFile().getAbsolutePath()));
-                application.launchOrAttach();
-
-                application.waitForInputIdle(Application.SHORT_TIMEOUT);
-            }
-
             getLogger().info("Waiting...");
-            Panel kylinPanel = getAutomation().findPane("Kylin");
-            while (kylinPanel == null) {
-                kylinPanel = getAutomation().findPane("Kylin");
-            }
+            final App kylinApp = launchBot();
             getLogger().success("Found");
 
             getLogger().info("Sending SKU to API with quantity of (" + taskQuantity + ")");
