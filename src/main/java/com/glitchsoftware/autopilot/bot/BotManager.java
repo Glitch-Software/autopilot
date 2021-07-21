@@ -3,10 +3,7 @@ package com.glitchsoftware.autopilot.bot;
 import com.glitchsoftware.autopilot.AutoPilot;
 import com.glitchsoftware.autopilot.bot.impl.basic.KodaiBot;
 import com.glitchsoftware.autopilot.bot.impl.basic.WhatBotBot;
-import com.glitchsoftware.autopilot.bot.impl.rest.CybersoleBot;
-import com.glitchsoftware.autopilot.bot.impl.rest.KylinBot;
-import com.glitchsoftware.autopilot.bot.impl.rest.PrismBot;
-import com.glitchsoftware.autopilot.bot.impl.rest.WrathBot;
+import com.glitchsoftware.autopilot.bot.impl.rest.*;
 import com.glitchsoftware.autopilot.bot.types.BasicBot;
 import com.glitchsoftware.autopilot.bot.types.rest.RestBot;
 import com.glitchsoftware.autopilot.bot.types.rest.types.ConnectionBot;
@@ -39,6 +36,7 @@ public class BotManager {
         this.bots.add(new KylinBot());
     //    this.bots.add(new PrismBot());
         this.bots.add(new WrathBot());
+        this.bots.add(new OminousBot());
 
         loadBots();
     }

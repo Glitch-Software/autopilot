@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 public enum AutoPilot {
     INSTANCE;
 
-    private final String VERSION = "1.0.7";
+    private final String VERSION = "1.0.8";
 
     private final File baseFile = new File(System.getenv("APPDATA"), "Glitch-Software" + File.separator + "AutoPilot");
     private final File botsFile = new File(baseFile, "bots");
